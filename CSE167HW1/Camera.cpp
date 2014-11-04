@@ -48,7 +48,6 @@ void Camera::inverse(){
     //use the formula to do inverse of R times the inverse of T
     //rotation matrix
     Matrix4 rotate = c;
-    c.print("before inverse");
     rotate.m[0][3] = 0;
     rotate.m[1][3] = 0;
     rotate.m[2][3] = 0;
@@ -56,19 +55,9 @@ void Camera::inverse(){
     rotate.m[3][0] = 0;
     rotate.m[3][1] = 0;
     rotate.m[3][2] = 0;
-    /*
-    Matrix4 rotate = Matrix4();
-    rotate.m[0][0] = c.m[0][0];
-    rotate.m[0][1] = c.m[0][1];
-    rotate.m[0][2] = c.m[0][2];
-    rotate.m[0][3] = 0;
-    rotate.m[0][0] = c.m[0][0];
-    */
-    
-    
+   
     // inverse of R = transpose of R
     rotate.transpose();
-    rotate.print("rotation matrix after transpose: ");
     
     Matrix4 translate = Matrix4();
     translate.makeTranslate(-c.m[0][3], -c.m[1][3], -c.m[2][3]);

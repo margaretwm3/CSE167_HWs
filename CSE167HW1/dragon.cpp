@@ -23,3 +23,11 @@ void dragon::spin(double angle){
     tmp.makeRotateY(angle);
     model2world = model2world*tmp;
 }
+void dragon::scale(double scale){
+    Matrix4 tmp = Matrix4();
+    //tmp.identity();
+    tmp.makeScale(scale, scale, scale);
+    // the order is important to keep in the local space
+    model2world = model2world * tmp;
+    
+}

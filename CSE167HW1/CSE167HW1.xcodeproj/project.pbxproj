@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		5C0F62EA19F6CB640086E863 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C0F62E819F6CB640086E863 /* Camera.cpp */; };
+		5C2A9F8D1A045EEF00DFD820 /* bunny.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C2A9F8B1A045EEE00DFD820 /* bunny.cpp */; };
+		5C2A9F901A045F4600DFD820 /* dragon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C2A9F8E1A045F4600DFD820 /* dragon.cpp */; };
 		5C40EB5F19E8978A00E89B62 /* cube.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C40EB5519E8978A00E89B62 /* cube.cpp */; };
 		5C40EB6019E8978A00E89B62 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C40EB5719E8978A00E89B62 /* main.cpp */; };
 		5C40EB6119E8978A00E89B62 /* Matrix4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C40EB5919E8978A00E89B62 /* Matrix4.cpp */; };
@@ -35,6 +37,10 @@
 /* Begin PBXFileReference section */
 		5C0F62E819F6CB640086E863 /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Camera.cpp; sourceTree = "<group>"; };
 		5C0F62E919F6CB640086E863 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
+		5C2A9F8B1A045EEE00DFD820 /* bunny.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bunny.cpp; sourceTree = "<group>"; };
+		5C2A9F8C1A045EEF00DFD820 /* bunny.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bunny.h; sourceTree = "<group>"; };
+		5C2A9F8E1A045F4600DFD820 /* dragon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dragon.cpp; sourceTree = "<group>"; };
+		5C2A9F8F1A045F4600DFD820 /* dragon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dragon.h; sourceTree = "<group>"; };
 		5C40EB5519E8978A00E89B62 /* cube.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cube.cpp; sourceTree = "<group>"; };
 		5C40EB5619E8978A00E89B62 /* cube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cube.h; sourceTree = "<group>"; };
 		5C40EB5719E8978A00E89B62 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
@@ -71,6 +77,10 @@
 		5CB263AC19E620BD0055C259 = {
 			isa = PBXGroup;
 			children = (
+				5C2A9F8E1A045F4600DFD820 /* dragon.cpp */,
+				5C2A9F8F1A045F4600DFD820 /* dragon.h */,
+				5C2A9F8B1A045EEE00DFD820 /* bunny.cpp */,
+				5C2A9F8C1A045EEF00DFD820 /* bunny.h */,
 				5C0F62E819F6CB640086E863 /* Camera.cpp */,
 				5C0F62E919F6CB640086E863 /* Camera.h */,
 				5C6FFF9419EE1B19009A5160 /* ball.cpp */,
@@ -170,6 +180,8 @@
 				5C40EB6119E8978A00E89B62 /* Matrix4.cpp in Sources */,
 				5C7D6A1419E9D23200859756 /* Vector4.cpp in Sources */,
 				5C6FFF9619EE1B19009A5160 /* ball.cpp in Sources */,
+				5C2A9F8D1A045EEF00DFD820 /* bunny.cpp in Sources */,
+				5C2A9F901A045F4600DFD820 /* dragon.cpp in Sources */,
 				5C0F62EA19F6CB640086E863 /* Camera.cpp in Sources */,
 				5C40EB6019E8978A00E89B62 /* main.cpp in Sources */,
 				5C40EB6319E8978A00E89B62 /* window.cpp in Sources */,

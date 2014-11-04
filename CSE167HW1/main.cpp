@@ -17,6 +17,9 @@ namespace Globals
 {
   Cube cube;
   class ball ball;
+  Camera camera;
+  class bunny bunny;
+  class dragon dragon;
 };
 
 int main(int argc, char *argv[])
@@ -36,7 +39,8 @@ int main(int argc, char *argv[])
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);  // set polygon drawing mode to fill front and back of each polygon
   glDisable(GL_CULL_FACE);     // disable backface culling to render both sides of polygons
   glShadeModel(GL_SMOOTH);             	      // set shading to smooth
-  glMatrixMode(GL_PROJECTION); 
+  glMatrixMode(GL_PROJECTION);
+  
   
   // Generate material properties:
   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
@@ -44,22 +48,27 @@ int main(int argc, char *argv[])
   glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
   glEnable(GL_COLOR_MATERIAL);
   
+  
   // Generate light source:
   glLightfv(GL_LIGHT0, GL_POSITION, position);
-  glEnable(GL_LIGHTING);
+  glDisable(GL_LIGHTING); //turn the light off
   glEnable(GL_LIGHT0);
   
+    
   // Install callback functions:
   // register callbacks
   glutDisplayFunc(Window::displayCallback);
   glutReshapeFunc(Window::reshapeCallback);
   glutIdleFunc(Window::idleCallback);
+  
+  
     
   // Initialize cube matrix:
   Globals::cube.getMatrix().identity();
   
   // keyboard key
   glutKeyboardFunc(Window::processNormalKeys);
+  glutSpecialFunc(Window::processSpecialKeys);
 
 
   //Test for Vector3 class

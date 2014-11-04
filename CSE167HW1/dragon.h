@@ -20,6 +20,7 @@ public:
     dragon(); //constructor
     Matrix4& getMatrix(); //return the model2world matrix
     void spin(double);      // spin cube [degrees]
+    void scale(double scale);
 
 };
 

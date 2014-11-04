@@ -46,9 +46,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "60"
-            endingLineNumber = "60"
-            landmarkName = "Window::idleCallback()"
-            landmarkType = "5">
+            endingLineNumber = "60">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -62,9 +60,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "62"
-            endingLineNumber = "62"
-            landmarkName = "Window::idleCallback()"
-            landmarkType = "5">
+            endingLineNumber = "62">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -110,9 +106,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "87"
-            endingLineNumber = "87"
-            landmarkName = "Window::reshapeCallback(int w, int h)"
-            landmarkType = "5">
+            endingLineNumber = "87">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

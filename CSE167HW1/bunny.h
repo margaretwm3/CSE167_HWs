@@ -20,7 +20,7 @@ public:
     bunny(); //constructor
     Matrix4& getMatrix(); //return the model2world matrix
     void spin(double);      // spin cube [degrees]
-    //void scale(double scale);
+    void scale(double scale);
 };
 
 #endif /* defined(__CSE167HW1__bunny__) */
