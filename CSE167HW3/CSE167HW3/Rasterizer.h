@@ -8,6 +8,7 @@
 
 #ifndef __CSE167HW3__Rasterizer__
 #define __CSE167HW3__Rasterizer__
+#define M_PI 3.14159265358979323846
 
 #include <stdio.h>
 #include "Vector4.h"

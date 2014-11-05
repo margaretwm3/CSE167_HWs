@@ -29,7 +29,6 @@ double center_x, center_y,center_z;
 bool spin;
 Matrix4 modelViewMatrix = Matrix4();
 
-
 //for bunny and dragon
 vector<Vector3> normal;
 vector<Vector3> position;
@@ -41,10 +40,17 @@ double y_biggest = 0;
 double z_smallest = 100;
 double z_biggest = 0;
 
+//for shading
+Vector3 lightSource = Vector3(1.5,1.5,1.5);
+double brightness = 1000;
+
 struct Color    // generic color class
 {
     float r,g,b;  // red, green, blue
 };
+
+Color lightColor = {1.0,1.0,1.0};
+bool illumination = false;
 
 // These are the x,y,z coordinates of the vertices of the triangles
 float vertices[] = {
@@ -214,16 +220,22 @@ void rasterize()
         scaling = z_ratio;
     }
     scalingMatrix.makeScale(scaling, scaling,scaling);
-    scalingMatrix.print("scaling matrix is ");
     Matrix4 translation = Matrix4();
     translation.identity();
     translation.makeTranslate(-center_x, -center_y,-center_z);
-    translation.print("translation matrix ");
-
-    modelViewMatrix.print("modelview matrix in rasterize ");
+    
     //for(int i = 0;i<sizeof(vertices); i+=3){
     for(int i = 0;i<position.size();i++){
+        double red = 1, green = 1, blue = 1;
         Vector4 p = Vector4(position[i].getX(),position[i].getY(),position[i].getZ(),1);
+        //illumination
+        Vector3 norm = Vector3(normal[i].getX(),normal[i].getY(),normal[i].getZ());
+        if(illumination == true){
+            lightSource.normalize(); norm.normalize();
+            red = lightSource.dot(lightSource, norm)/((norm-lightSource).length()*(norm-lightSource).length()*M_PI) * brightness * lightColor.r * 1;
+            green = lightSource.dot(lightSource, norm)/((norm-lightSource).length()*(norm-lightSource).length()*M_PI) * brightness * lightColor.g * 1;
+            blue = lightSource.dot(lightSource, norm)/((norm-lightSource).length()*(norm-lightSource).length()*M_PI) * brightness * lightColor.b * 1;
+        }
         p = modelViewMatrix *p;
         p = translation * p;
         p = scalingMatrix * p;
@@ -235,7 +247,7 @@ void rasterize()
             continue;
         }
         p = viewport * p;
-        drawPoint(p.getX(), p.getY(), 1, 1, 1);
+        drawPoint(p.getX(), p.getY(), red, green, blue);
     }
 }
 
@@ -261,7 +273,6 @@ void keyboardCallback(unsigned char key, int, int)
         tmp.makeScale(0.9,0.9,0.9);
         // the order is important to keep in the local space
         modelViewMatrix =  modelViewMatrix * tmp;
-        modelViewMatrix.print("model matrix in scaling down : ");
         displayCallback();
     }
     // scale cueb up
@@ -279,6 +290,16 @@ void keyboardCallback(unsigned char key, int, int)
         tmp.identity();
         tmp.makeRotateY(2.0);
         modelViewMatrix = modelViewMatrix * tmp;
+        displayCallback();
+    }
+    //without illumination, white
+    else if(key == '1'){
+        illumination = false;
+        displayCallback();
+    }
+    //with illumination shading
+    else if (key == '2'){
+        illumination = true;
         displayCallback();
     }
     cerr << "Key pressed: " << key << endl;
