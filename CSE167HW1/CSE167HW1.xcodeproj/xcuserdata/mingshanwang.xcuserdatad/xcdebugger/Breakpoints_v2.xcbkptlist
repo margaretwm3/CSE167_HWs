@@ -31,7 +31,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "90"
             endingLineNumber = "90"
-            landmarkName = "Matrix4::operator*(const Matrix4&amp; m2)"
+            landmarkName = "Matrix4::transpose()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
