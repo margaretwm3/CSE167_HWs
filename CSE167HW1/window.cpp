@@ -549,10 +549,13 @@ void Window::displayCallback()
         cout << "z:  " << z_ratio << endl;
         cout << "scaling : " << scaling << endl;
         scalingMatrix.makeScale(scaling, scaling,scaling);
+        scalingMatrix.print("scaling matrix is ");
         
         Matrix4 translation = Matrix4();
         translation.identity();
         translation.makeTranslate(-center_x, -center_y, -center_z);
+        translation.print("translation matrix :");
+        
         //translation.print("translation matrix: ");
         glmatrix = glmatrix * scalingMatrix;
         glmatrix = glmatrix * translation;

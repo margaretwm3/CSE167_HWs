@@ -11,15 +11,35 @@
 #include "Vector3.h"
 #include "Matrix4.h"
 #include <iostream>
+#include <stdlib.h>
+#include <fstream>
 #include <math.h>
+#include <vector>
 #include <OPENGL/gl.h>
 #include <GLUT/glut.h>
 using namespace std;
 
 static int window_width = 512, window_height = 512;
 static float* pixels = new float[window_width * window_height * 3];
+bool bunny = true;
+bool dragon = false;
+double angle;
+//calculate the center of the model
+double center_x, center_y,center_z;
+bool spin;
+Matrix4 modelViewMatrix = Matrix4();
 
-using namespace std;
+
+//for bunny and dragon
+vector<Vector3> normal;
+vector<Vector3> position;
+//Calculate the minimum and maximum point coordinates in all three dimensions, one for each dimension (x,y,z), store the smallest and biggest that come across and display
+double x_smallest = 100;
+double x_biggest = 0;
+double y_smallest = 100;
+double y_biggest = 0;
+double z_smallest = 100;
+double z_biggest = 0;
 
 struct Color    // generic color class
 {
@@ -45,6 +65,94 @@ float vertices[] = {
 void loadData()
 {
     // point cloud parser goes here
+    double x;
+    double y;
+    double z;
+    double norX;
+    double norY;
+    double norZ;
+    
+    x_smallest = 100;
+    x_biggest = 0;
+    y_smallest = 100;
+    y_biggest = 0;
+    z_smallest = 100;
+    z_biggest = 0;
+    
+    if(bunny == true && dragon == false){
+        normal.clear();
+        position.clear();
+        //read in file
+        FILE* file;
+        file = fopen("/Users/mingshanwang/Dropbox/CSE167/CSE167HW1/bunny.xyz","r");
+        while(!feof(file)){
+            fscanf(file,"%lf",&x);
+            fscanf(file,"%lf",&y);
+            fscanf(file,"%lf",&z);
+            fscanf(file,"%lf",&norX);
+            fscanf(file,"%lf",&norY);
+            fscanf(file, "%lf",&norZ);
+            Vector3 p = Vector3(x, y, z);
+            Vector3 n = Vector3(norX, norY, norZ);
+            normal.push_back(n);
+            position.push_back(p);
+       }
+    }
+    else if(dragon == true && bunny == false){
+        normal.clear();
+        position.clear();
+        //read in file
+        FILE* file;
+        file = fopen("/Users/mingshanwang/Dropbox/CSE167/CSE167HW1/dragon.xyz","r");
+        while(!feof(file)){
+            fscanf(file,"%lf",&x);
+            fscanf(file,"%lf",&y);
+            fscanf(file,"%lf",&z);
+            fscanf(file,"%lf",&norX);
+            fscanf(file,"%lf",&norY);
+            fscanf(file, "%lf",&norZ);
+            Vector3 p = Vector3(x, y, z);
+            Vector3 n = Vector3(norX, norY, norZ);
+            normal.push_back(n);
+            position.push_back(p);
+        }
+    }
+    
+    //normalize all the normals in the normal vector
+    for(int i = 0 ;i < normal.size();i++){
+        normal[i].normalize();
+    }
+    
+    for(int i = 0; i< position.size();i++){
+        if(position[i].getX()< x_smallest){
+            x_smallest = position[i].getX();
+        }
+        if(position[i].getX()>x_biggest){
+            x_biggest = position[i].getX();
+        }
+    }
+    
+    for(int i = 0; i< position.size();i++){
+        if(position[i].getY() < y_smallest){
+            y_smallest = position[i].getY();
+        }
+        if(position[i].getY()>y_biggest){
+            y_biggest = position[i].getY();
+        }
+    }
+    
+    for(int i = 0; i< position.size();i++){
+        if(position[i].getZ() < z_smallest){
+            z_smallest = position[i].getZ();
+        }
+        if(position[i].getZ()>z_biggest){
+            z_biggest = position[i].getZ();
+        }
+    }
+    
+    center_x = 0.5*(x_smallest + x_biggest);
+    center_y = 0.5*(y_smallest + y_biggest);
+    center_z = 0.5*(z_smallest + z_biggest);
 }
 
 // Clear frame buffer
@@ -72,12 +180,9 @@ void rasterize()
 {
     // Put your main rasterization loop here
     // It should go over the point model and call drawPoint for every point in it
-    Matrix4 modelViewMatrix = Matrix4();
-    modelViewMatrix.identity();
-    
     //create the camera matrix
     Camera cameraMatrix = Camera();
-    Vector3 *e = new Vector3(0,10,10);
+    Vector3 *e = new Vector3(0,0,20);
     Vector3 *d = new Vector3(0,0,0);
     Vector3 *up =new Vector3(0,1,0);
     cameraMatrix.set(*e,*d,*up);
@@ -91,11 +196,38 @@ void rasterize()
     Matrix4 viewport;
     viewport.makeViewportMatrix(0, window_width, 0, window_height);
     viewport.print("viewport matrix is ");
-    
-    for(int i = 0;i<sizeof(vertices); i+=3){
-        Vector4 p = Vector4(vertices[i],vertices[i+1],vertices[i+2],1);
+
+    //make a scaling matrix for bunny based on the window height and width
+    Matrix4 scalingMatrix = Matrix4();
+    scalingMatrix.identity();
+    double x_ratio = (2*(tan(30 * M_PI/ 180.0) * 20) * aspectRatio)/(x_biggest -x_smallest);
+    double y_ratio = 2*(tan(30 * M_PI/ 180.0) * 20)/(y_biggest - y_smallest);
+    double z_ratio = 40/(z_biggest - z_smallest);
+    double scaling=1000;
+
+    if(x_ratio < y_ratio){
+        scaling = x_ratio;
+    }
+    else
+        scaling = y_ratio;
+    if(z_ratio < scaling){
+        scaling = z_ratio;
+    }
+    scalingMatrix.makeScale(scaling, scaling,scaling);
+    scalingMatrix.print("scaling matrix is ");
+    Matrix4 translation = Matrix4();
+    translation.identity();
+    translation.makeTranslate(-center_x, -center_y,-center_z);
+    translation.print("translation matrix ");
+
+    modelViewMatrix.print("modelview matrix in rasterize ");
+    //for(int i = 0;i<sizeof(vertices); i+=3){
+    for(int i = 0;i<position.size();i++){
+        Vector4 p = Vector4(position[i].getX(),position[i].getY(),position[i].getZ(),1);
         p = modelViewMatrix *p;
-        p = camMatrix* p;
+        p = translation * p;
+        p = scalingMatrix * p;
+        p = camMatrix * p;
         p = projectionMatrix *p;
         //dehomogenize the vector4
         p.dehomogenize();
@@ -122,17 +254,62 @@ void keyboardCallback(unsigned char key, int, int)
     if(key == 27){
         exit(0);
     }
+    //scale bunny or dragon down
+    else if(key == 's'){
+        Matrix4 tmp = Matrix4();
+        //tmp.identity();
+        tmp.makeScale(0.9,0.9,0.9);
+        // the order is important to keep in the local space
+        modelViewMatrix =  modelViewMatrix * tmp;
+        modelViewMatrix.print("model matrix in scaling down : ");
+        displayCallback();
+    }
+    // scale cueb up
+    else if(key == 'S'){
+        Matrix4 tmp = Matrix4();
+        //tmp.identity();
+        tmp.makeScale(1.1,1.1,1.1);
+        // the order is important to keep in the local space
+        modelViewMatrix = modelViewMatrix * tmp;
+        displayCallback();
+    }
+    //make object rotate
+    else if(key == 'r'){
+        Matrix4 tmp = Matrix4();
+        tmp.identity();
+        tmp.makeRotateY(2.0);
+        modelViewMatrix = modelViewMatrix * tmp;
+        displayCallback();
+    }
     cerr << "Key pressed: " << key << endl;
+}
+
+void processSpecialKeys(int key, int x, int y){
+    modelViewMatrix.identity();
+    //display the bunny
+    if(key == GLUT_KEY_F1)
+    {
+        bunny = true;
+        dragon = false;
+        loadData();
+        displayCallback();
+       
+    }
+    //display the dragon
+    else if(key == GLUT_KEY_F2){
+        dragon = true;
+        bunny = false;
+        loadData();
+        displayCallback();
+    }
 }
 
 void displayCallback()
 {
     clearBuffer();
     rasterize();
-    
     // glDrawPixels writes a block of pixels to the framebuffer
     glDrawPixels(window_width, window_height, GL_RGB, GL_FLOAT, pixels);
-    
     glutSwapBuffers();
 }
 
@@ -142,11 +319,12 @@ int main(int argc, char** argv) {
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
     glutInitWindowSize(window_width, window_height);
     glutCreateWindow("Rasterizer");
-    
     loadData();
+    modelViewMatrix.identity();
     
     glutReshapeFunc(reshapeCallback);
     glutDisplayFunc(displayCallback);
+    glutSpecialFunc(processSpecialKeys);
     glutKeyboardFunc(keyboardCallback);
     glutMainLoop();
 }

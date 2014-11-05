@@ -32,12 +32,9 @@ void Camera::set(Vector3& e,Vector3& d, Vector3& up){
 
 Matrix4& Camera::getCameraMatrix(){
     //added for hw3 to adjust the camera matrix
-    Matrix4 translate;
-    translate.makeTranslate(0,0,20);
     /********
      translate should be multiply on the right before transform to the camera space
      */
-    c = c* translate;
     inverse();
     return c;
 }

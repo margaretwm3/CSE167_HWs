@@ -45,6 +45,10 @@ class Vector3{
         //normalize the vector (make it so that its length is equal to one)
         void normalize();
     
+        double getX();
+        double getY();
+        double getZ();
+    
         // print x,y and z components of the vector after a comment string
         void print(string comment);
         friend class Matrix4;

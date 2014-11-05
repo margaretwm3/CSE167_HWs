@@ -18,6 +18,8 @@
     void rasterize();
     void reshapeCallback(int new_width, int new_height);// Called whenever the window size changes
     void keyboardCallback(unsigned char key, int, int);
+    void processSpecialKeys(int key, int x, int y);
+    //void spin(double deg); // deg in degress
     void displayCallback();
     
 

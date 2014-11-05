@@ -80,6 +80,19 @@ void Vector3::normalize(){
     this-> z = this->z/ len;
 }
 
+double Vector3::getX(){
+    return this->x;
+}
+
+double Vector3::getY(){
+    return this->y;
+}
+
+double Vector3::getZ(){
+    return this->z;
+}
+
+
 // print x,y and z components of the vector after a comment string
 void Vector3::print(string comment){
     cout << comment << this-> x << " " << this->y << " " << this->z << " " << endl;
