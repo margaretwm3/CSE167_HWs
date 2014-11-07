@@ -22,6 +22,7 @@
     void processSpecialKeys(int key, int x, int y);
     //void spin(double deg); // deg in degress
     void displayCallback();
-    
+    void idleCallback();
+
 
 #endif /* defined(__CSE167HW3__Rasterizer__) */

@@ -185,13 +185,6 @@ void drawPoint(int x, int y, float r, float g, float b,int pointSize)
             pixels[offset +2]=b;
         }
     }
-    
-    /*
-    int offset = y*window_width*3 + x*3;
-    pixels[offset]   = r;
-    pixels[offset+1] = g;
-    pixels[offset+2] = b;
-     */
 }
 
 void rasterize()
@@ -245,8 +238,8 @@ void rasterize()
         if(illumination == true){
             lightSource.normalize(); norm.normalize();
             red = lightSource.dot(lightSource, norm)/((norm-lightSource).length()*(norm-lightSource).length()*M_PI) * brightness * lightColor.r * 1;
-            green = lightSource.dot(lightSource, norm)/((norm-lightSource).length()*(norm-lightSource).length()*M_PI) * brightness * lightColor.g * 1;
-            blue = lightSource.dot(lightSource, norm)/((norm-lightSource).length()*(norm-lightSource).length()*M_PI) * brightness * lightColor.b * 1;
+            green = lightSource.dot(lightSource, norm)/((norm-lightSource).length()*(norm-lightSource).length()*M_PI) * brightness * lightColor.g * 0;
+            blue = lightSource.dot(lightSource, norm)/((norm-lightSource).length()*(norm-lightSource).length()*M_PI) * brightness * lightColor.b * 0;
         }
         p = modelViewMatrix *p;
         p = translation * p;
@@ -270,7 +263,6 @@ void rasterize()
             if(zbuffer[index] > tmp){
                 //update the zbuffer value
                 zbuffer[index] = tmp;
-                cout << "zbuffer is " << tmp << endl;
                 if(pointReSize == true){
                     if(tmp<0.84){
                         drawPoint(p.getX(), p.getY(), red, green, blue,4);
@@ -350,7 +342,6 @@ void keyboardCallback(unsigned char key, int, int)
         illumination = true;
         displayCallback();
     }
-    
     //turn on the zbuffer
     if(key == '3'){
         zbufferOn = true;
@@ -384,6 +375,10 @@ void processSpecialKeys(int key, int x, int y){
     }
 }
 
+void idleCallback(){
+    displayCallback();
+}
+
 void displayCallback()
 {
     clearBuffer();
@@ -410,6 +405,7 @@ int main(int argc, char** argv) {
     
     glutReshapeFunc(reshapeCallback);
     glutDisplayFunc(displayCallback);
+    glutIdleFunc(idleCallback);
     glutSpecialFunc(processSpecialKeys);
     glutKeyboardFunc(keyboardCallback);
     glutMainLoop();
