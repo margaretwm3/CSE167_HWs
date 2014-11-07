@@ -15,7 +15,7 @@
 
     void loadData();
     void clearBuffer();// Clear frame buffer
-    void drawPoint(int x, int y, float r, float g, float b);  // Draw a point into the frame buffer
+    void drawPoint(int x, int y, float r, float g, float b, int pointSize);  // Draw a point into the frame buffer
     void rasterize();
     void reshapeCallback(int new_width, int new_height);// Called whenever the window size changes
     void keyboardCallback(unsigned char key, int, int);

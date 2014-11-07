@@ -56,6 +56,9 @@ bool illumination = false;
 static float* zbuffer  = new float[window_width * window_height];//map to each pixel
 bool zbufferOn = false;
 
+//Resize the point size
+bool  pointReSize= false;
+
 
 void loadData()
 {
@@ -167,12 +170,28 @@ void clearBuffer()
 }
 
 // Draw a point into the frame buffer
-void drawPoint(int x, int y, float r, float g, float b)
+void drawPoint(int x, int y, float r, float g, float b,int pointSize)
 {
-   int offset = y*window_width*3 + x*3;
+    int offset = 0;
+    //draw horizontally
+    for(int i = 0;i<pointSize;i++){
+        //draw vertically
+        for(int j = 0;j<pointSize;j++){
+            offset = (x+i)*3 + (j+y)*window_width*3;
+            if(offset > window_width * window_height * 3)
+                continue;
+            pixels[offset] =r;
+            pixels[offset +1] =g;
+            pixels[offset +2]=b;
+        }
+    }
+    
+    /*
+    int offset = y*window_width*3 + x*3;
     pixels[offset]   = r;
     pixels[offset+1] = g;
     pixels[offset+2] = b;
+     */
 }
 
 void rasterize()
@@ -245,10 +264,25 @@ void rasterize()
             double tmp = p.getZ();
             p = viewport * p;
             int index = p.getX() + p.getY() * window_width;
+            if(index >= window_width * window_height || index < 0){
+                continue;
+            }
             if(zbuffer[index] > tmp){
                 //update the zbuffer value
                 zbuffer[index] = tmp;
-                drawPoint(p.getX(), p.getY(), red, green, blue);
+                cout << "zbuffer is " << tmp << endl;
+                if(pointReSize == true){
+                    if(tmp<0.84){
+                        drawPoint(p.getX(), p.getY(), red, green, blue,4);
+                    }
+                    else if(tmp < 0.87){
+                        drawPoint(p.getX(), p.getY(), red, green, blue,2);
+                    }
+                    else{
+                        drawPoint(p.getX(), p.getY(), red, green, blue,1);
+                    }
+               }
+                drawPoint(p.getX(), p.getY(),red, green, blue,1);
             }
             else{
                 skipCount++;
@@ -256,7 +290,7 @@ void rasterize()
         }
         else{
             p = viewport * p;
-            drawPoint(p.getX(), p.getY(), red, green, blue);
+            drawPoint(p.getX(), p.getY(), red, green, blue,2);
         }
     }
     cout << "skipCount is " << skipCount << endl;
@@ -271,7 +305,7 @@ void reshapeCallback(int new_width, int new_height)
     delete[] pixels;
     delete[] zbuffer;
     pixels = new float[window_width * window_height * 3];
-    zbuffer = new float[window_height * window_width];
+    zbuffer = new float[window_width * window_height];
     displayCallback();
 }
 
@@ -320,6 +354,11 @@ void keyboardCallback(unsigned char key, int, int)
     //turn on the zbuffer
     if(key == '3'){
         zbufferOn = true;
+        displayCallback();
+    }
+    //specify the point size
+    if(key == '4'){
+        pointReSize = true;
         displayCallback();
     }
     cerr << "Key pressed: " << key << endl;
