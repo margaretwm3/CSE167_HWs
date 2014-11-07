@@ -20,7 +20,7 @@
 using namespace std;
 
 static int window_width = 512, window_height = 512;
-static float* pixels = new float[window_width * window_height * 3];
+static float* pixels = new float[window_width * window_height * 3];//frame buffer
 bool bunny = true;
 bool dragon = false;
 double angle;
@@ -52,20 +52,9 @@ struct Color    // generic color class
 Color lightColor = {1.0,1.0,1.0};
 bool illumination = false;
 
-// These are the x,y,z coordinates of the vertices of the triangles
-float vertices[] = {
-    -4,-4,4, 4,-4,4, 4,4,4, -4,4,4,     // front face
-    -4,-4,-4, -4,-4,4, -4,4,4, -4,4,-4, // left face
-    4,-4,-4,-4,-4,-4, -4,4,-4, 4,4,-4,  // back face
-    4,-4,4, 4,-4,-4, 4,4,-4, 4,4,4,     // right face
-    4,4,4, 4,4,-4, -4,4,-4, -4,4,4,     // top face
-    -4,-4,4, -4,-4,-4, 4,-4,-4, 4,-4,4, // bottom face
-    
-    -20,-4,20, 20,-4,20, 20,-4,-20, -20,-4,-20, // grass
-    -4,4,4, 4,4,4, 0,8,4,                       // front attic wall
-    4,4,4, 4,4,-4, 0,8,-4, 0,8,4,               // left slope
-    -4,4,4, 0,8,4, 0,8,-4, -4,4,-4,             // right slope
-    4,4,-4, -4,4,-4, 0,8,-4};                   // rear attic wall
+//Create a zbuffer
+static float* zbuffer  = new float[window_width * window_height];//map to each pixel
+bool zbufferOn = false;
 
 
 void loadData()
@@ -90,7 +79,7 @@ void loadData()
         position.clear();
         //read in file
         FILE* file;
-        file = fopen("/Users/mingshanwang/Dropbox/CSE167/CSE167HW1/bunny.xyz","r");
+        file = fopen("/Users/ruiqingqiu/Desktop/CSE167_HWs/CSE167HW1/bunny.xyz","r");
         while(!feof(file)){
             fscanf(file,"%lf",&x);
             fscanf(file,"%lf",&y);
@@ -109,7 +98,7 @@ void loadData()
         position.clear();
         //read in file
         FILE* file;
-        file = fopen("/Users/mingshanwang/Dropbox/CSE167/CSE167HW1/dragon.xyz","r");
+        file = fopen("/Users/ruiqingqiu/Desktop/CSE167_HWs/CSE167HW1/dragon.xyz","r");
         while(!feof(file)){
             fscanf(file,"%lf",&x);
             fscanf(file,"%lf",&y);
@@ -171,6 +160,10 @@ void clearBuffer()
         pixels[i*3+1] = clearColor.g;
         pixels[i*3+2] = clearColor.b;
     }
+    //clear the zbuffer
+    for(int i =0;i< window_width * window_height;i++){
+        zbuffer[i] = 1;
+    }
 }
 
 // Draw a point into the frame buffer
@@ -223,7 +216,7 @@ void rasterize()
     Matrix4 translation = Matrix4();
     translation.identity();
     translation.makeTranslate(-center_x, -center_y,-center_z);
-    
+    int skipCount = 0;
     //for(int i = 0;i<sizeof(vertices); i+=3){
     for(int i = 0;i<position.size();i++){
         double red = 1, green = 1, blue = 1;
@@ -246,9 +239,28 @@ void rasterize()
         if(p.getX() < -1 || p.getX() >1 || p.getY() <-1 || p.getY() >1){
             continue;
         }
-        p = viewport * p;
-        drawPoint(p.getX(), p.getY(), red, green, blue);
+        //calculate the zbuffer values
+        if(zbufferOn == true){
+            //store the z-value before the viewport
+            double tmp = p.getZ();
+            p = viewport * p;
+            int index = p.getX() + p.getY() * window_width;
+            if(zbuffer[index] > tmp){
+                //update the zbuffer value
+                zbuffer[index] = tmp;
+                drawPoint(p.getX(), p.getY(), red, green, blue);
+            }
+            else{
+                skipCount++;
+            }
+        }
+        else{
+            p = viewport * p;
+            drawPoint(p.getX(), p.getY(), red, green, blue);
+        }
     }
+    cout << "skipCount is " << skipCount << endl;
+
 }
 
 // Called whenever the window size changes
@@ -302,6 +314,12 @@ void keyboardCallback(unsigned char key, int, int)
         illumination = true;
         displayCallback();
     }
+    
+    //turn on the zbuffer
+    if(key == '3'){
+        zbufferOn = true;
+        displayCallback();
+    }
     cerr << "Key pressed: " << key << endl;
 }
 
@@ -342,6 +360,12 @@ int main(int argc, char** argv) {
     glutCreateWindow("Rasterizer");
     loadData();
     modelViewMatrix.identity();
+    
+    //initialize the zbuffer
+    double zbufferSize = window_width * window_height;
+    for(int i  = 0; i< zbufferSize ;i++){
+        zbuffer[i] = 1;
+    }
     
     glutReshapeFunc(reshapeCallback);
     glutDisplayFunc(displayCallback);
