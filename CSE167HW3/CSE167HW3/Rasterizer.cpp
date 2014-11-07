@@ -79,7 +79,7 @@ void loadData()
         position.clear();
         //read in file
         FILE* file;
-        file = fopen("/Users/ruiqingqiu/Desktop/CSE167_HWs/CSE167HW1/bunny.xyz","r");
+        file = fopen("/Users/Margaret/Desktop/CSE167_HWs/CSE167HW1/bunny.xyz","r");
         while(!feof(file)){
             fscanf(file,"%lf",&x);
             fscanf(file,"%lf",&y);
@@ -98,7 +98,7 @@ void loadData()
         position.clear();
         //read in file
         FILE* file;
-        file = fopen("/Users/ruiqingqiu/Desktop/CSE167_HWs/CSE167HW1/dragon.xyz","r");
+        file = fopen("/Users/Margaret/Desktop/CSE167_HWs/CSE167HW1/dragon.xyz","r");
         while(!feof(file)){
             fscanf(file,"%lf",&x);
             fscanf(file,"%lf",&y);
@@ -269,7 +269,9 @@ void reshapeCallback(int new_width, int new_height)
     window_width  = new_width;
     window_height = new_height;
     delete[] pixels;
+    delete[] zbuffer;
     pixels = new float[window_width * window_height * 3];
+    zbuffer = new float[window_height * window_width];
     displayCallback();
 }
 
