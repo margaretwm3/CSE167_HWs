@@ -41,7 +41,7 @@ double z_smallest = 100;
 double z_biggest = 0;
 
 //for shading
-Vector3 lightSource = Vector3(1.5,1.5,1.5);
+Vector3 lightSource = Vector3(5,10,1);
 double brightness = 1000;
 
 struct Color    // generic color class
@@ -148,6 +148,7 @@ void loadData()
         }
     }
     
+    
     center_x = 0.5*(x_smallest + x_biggest);
     center_y = 0.5*(y_smallest + y_biggest);
     center_z = 0.5*(z_smallest + z_biggest);
@@ -178,7 +179,7 @@ void drawPoint(int x, int y, float r, float g, float b,int pointSize)
         //draw vertically
         for(int j = 0;j<pointSize;j++){
             offset = (x+i)*3 + (j+y)*window_width*3;
-            if(offset > window_width * window_height * 3)
+            if(offset >= window_width * window_height * 3)
                 continue;
             pixels[offset] =r;
             pixels[offset +1] =g;
@@ -235,11 +236,22 @@ void rasterize()
         Vector4 p = Vector4(position[i].getX(),position[i].getY(),position[i].getZ(),1);
         //illumination
         Vector3 norm = Vector3(normal[i].getX(),normal[i].getY(),normal[i].getZ());
+        
         if(illumination == true){
-            lightSource.normalize(); norm.normalize();
-            red = lightSource.dot(lightSource, norm)/((norm-lightSource).length()*(norm-lightSource).length()*M_PI) * brightness * lightColor.r * 1;
-            green = lightSource.dot(lightSource, norm)/((norm-lightSource).length()*(norm-lightSource).length()*M_PI) * brightness * lightColor.g * 0;
-            blue = lightSource.dot(lightSource, norm)/((norm-lightSource).length()*(norm-lightSource).length()*M_PI) * brightness * lightColor.b * 0;
+            //lightSource.normalize();
+            norm.normalize();
+            //get rid of the white point in the shading
+            if(isnan(norm.getX())){
+                continue;
+            }
+            float tmp_x = lightSource.getX() - p.getX();
+            float tmp_y = lightSource.getY() - p.getY();
+            float tmp_z = lightSource.getZ() - p.getZ();
+            Vector3 L = Vector3(tmp_x, tmp_y, tmp_z);
+            L.normalize();
+            red = lightSource.dot(L, norm)/((norm-lightSource).length()*(norm-lightSource).length()*M_PI) * brightness * lightColor.r * 1;
+            green = lightSource.dot(L, norm)/((norm-lightSource).length()*(norm-lightSource).length()*M_PI) * brightness * lightColor.g * 0;
+            blue = lightSource.dot(L, norm)/((norm-lightSource).length()*(norm-lightSource).length()*M_PI) * brightness * lightColor.b * 0;
         }
         p = modelViewMatrix *p;
         p = translation * p;
@@ -331,6 +343,29 @@ void keyboardCallback(unsigned char key, int, int)
         tmp.makeRotateY(2.0);
         modelViewMatrix = modelViewMatrix * tmp;
         displayCallback();
+    }
+    else if(key == 'i'){
+        lightSource.incX();
+    }
+    else if(key == 'I'){
+        lightSource.decX();
+
+    }
+    else if(key == 'o'){
+        lightSource.incY();
+
+    }
+    else if(key == 'O'){
+        lightSource.decY();
+
+    }
+    else if(key == 'p'){
+        lightSource.incZ();
+
+    }
+    else if(key == 'P'){
+        lightSource.decX();
+
     }
     //without illumination, white
     else if(key == '1'){

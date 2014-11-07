@@ -48,6 +48,12 @@ class Vector3{
         double getX();
         double getY();
         double getZ();
+    void incX();
+    void incY();
+    void incZ();
+    void decX();
+    void decY();
+    void decZ();
     
         // print x,y and z components of the vector after a comment string
         void print(string comment);

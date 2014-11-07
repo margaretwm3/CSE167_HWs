@@ -75,6 +75,7 @@ double Vector3::length(){
 //normalize the vector (make it so that its length is equal to one)
 void Vector3::normalize(){
     double len = this->length();
+
     this-> x = this->x/ len;
     this-> y = this->y/ len;
     this-> z = this->z/ len;
@@ -90,6 +91,30 @@ double Vector3::getY(){
 
 double Vector3::getZ(){
     return this->z;
+}
+
+void Vector3::incX(){
+    this->x++;
+}
+
+void Vector3::incY(){
+    this->y++;
+}
+
+void Vector3::incZ(){
+    this->z++;
+}
+
+void Vector3::decX(){
+    this->x--;
+}
+
+void Vector3::decY(){
+    this->y--;
+}
+
+void Vector3::decZ(){
+    this->z--;
 }
 
 
