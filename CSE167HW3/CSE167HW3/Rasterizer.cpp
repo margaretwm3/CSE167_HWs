@@ -203,11 +203,9 @@ void rasterize()
     Matrix4 projectionMatrix;
     double aspectRatio = (double)window_width/window_height;
     projectionMatrix.makeProjectionMatrix(60, aspectRatio, 1,1000);
-    projectionMatrix.print("projection matrix is ");
     //Create viewpoert matrix
     Matrix4 viewport;
     viewport.makeViewportMatrix(0, window_width, 0, window_height);
-    viewport.print("viewport matrix is ");
 
     //make a scaling matrix for bunny based on the window height and width
     Matrix4 scalingMatrix = Matrix4();
@@ -230,13 +228,12 @@ void rasterize()
     translation.identity();
     translation.makeTranslate(-center_x, -center_y,-center_z);
     int skipCount = 0;
-    //for(int i = 0;i<sizeof(vertices); i+=3){
+
     for(int i = 0;i<position.size();i++){
         double red = 1, green = 1, blue = 1;
         Vector4 p = Vector4(position[i].getX(),position[i].getY(),position[i].getZ(),1);
         //illumination
         Vector3 norm = Vector3(normal[i].getX(),normal[i].getY(),normal[i].getZ());
-        
         if(illumination == true){
             //lightSource.normalize();
             norm.normalize();
@@ -250,8 +247,8 @@ void rasterize()
             Vector3 L = Vector3(tmp_x, tmp_y, tmp_z);
             L.normalize();
             red = lightSource.dot(L, norm)/((norm-lightSource).length()*(norm-lightSource).length()*M_PI) * brightness * lightColor.r * 1;
-            green = lightSource.dot(L, norm)/((norm-lightSource).length()*(norm-lightSource).length()*M_PI) * brightness * lightColor.g * 0;
-            blue = lightSource.dot(L, norm)/((norm-lightSource).length()*(norm-lightSource).length()*M_PI) * brightness * lightColor.b * 0;
+            green = lightSource.dot(L, norm)/((norm-lightSource).length()*(norm-lightSource).length()*M_PI) * brightness * lightColor.g * 1;
+            blue = lightSource.dot(L, norm)/((norm-lightSource).length()*(norm-lightSource).length()*M_PI) * brightness * lightColor.b * 1;
         }
         p = modelViewMatrix *p;
         p = translation * p;
@@ -267,16 +264,18 @@ void rasterize()
         if(zbufferOn == true){
             //store the z-value before the viewport
             double tmp = p.getZ();
+            //cout << "befroe viewport z " << tmp << endl;
             p = viewport * p;
             int index = p.getX() + p.getY() * window_width;
             if(index >= window_width * window_height || index < 0){
                 continue;
             }
+            //cout << "z after viewport : " << p.getZ() << endl;
             if(zbuffer[index] > tmp){
                 //update the zbuffer value
                 zbuffer[index] = tmp;
                 if(pointReSize == true){
-                    if(tmp<0.84){
+                    if(tmp < 0.84){
                         drawPoint(p.getX(), p.getY(), red, green, blue,4);
                     }
                     else if(tmp < 0.87){
@@ -294,7 +293,7 @@ void rasterize()
         }
         else{
             p = viewport * p;
-            drawPoint(p.getX(), p.getY(), red, green, blue,2);
+            drawPoint(p.getX(), p.getY(), red, green, blue,1);
         }
     }
     cout << "skipCount is " << skipCount << endl;
@@ -370,21 +369,23 @@ void keyboardCallback(unsigned char key, int, int)
     //without illumination, white
     else if(key == '1'){
         illumination = false;
+        zbufferOn = false;
+        pointReSize = false;
         displayCallback();
     }
     //with illumination shading
     else if (key == '2'){
-        illumination = true;
+        illumination = !illumination;
         displayCallback();
     }
     //turn on the zbuffer
     if(key == '3'){
-        zbufferOn = true;
+        zbufferOn = !zbufferOn;
         displayCallback();
     }
     //specify the point size
     if(key == '4'){
-        pointReSize = true;
+        pointReSize = !pointReSize;
         displayCallback();
     }
     cerr << "Key pressed: " << key << endl;

@@ -3,7 +3,6 @@
 #include "Matrix4.h"
 #include <iostream>
 
-
 using namespace std;
 
 Matrix4::Matrix4()
@@ -105,34 +104,6 @@ void Matrix4::makeRotateY(double angle)
 
 //multiply matrix with matrix
 Matrix4 Matrix4::operator*(const Matrix4& m2){
-  /*
-  Matrix4 *result = new Matrix4();
-  //for every row, multiply with the other matrix
-  for(int i = 0 ;i < 4;++i){
-      
-    result->m[i][0] = this->m[i][0] * m2.m[0][0] +
-                      this->m[i][1] * m2.m[1][0] +
-                      this->m[i][2] * m2.m[2][0] +
-                      this->m[i][3] * m2.m[3][0];
-      
-    result->m[i][1] = this->m[i][0] * m2.m[0][1] +
-                      this->m[i][1] * m2.m[1][1] +
-                      this->m[i][2] * m2.m[2][1] +
-                      this->m[i][3] * m2.m[3][1];
-      
-    result->m[i][2] = this->m[i][0] * m2.m[0][2] +
-                      this->m[i][1] * m2.m[1][2] +
-                      this->m[i][2] * m2.m[2][2] +
-                      this->m[i][3] * m2.m[3][2];
-      
-    result->m[i][3] = this->m[i][0] * m2.m[0][3] +
-                      this->m[i][1] * m2.m[1][3] +
-                      this->m[i][2] * m2.m[2][3] +
-                      this->m[i][3] * m2.m[3][3];
-
-    }
-    return *result;
-    */
     Matrix4* product = new Matrix4();
     for(int row = 0; row < 4; row ++){
         for(int col = 0; col < 4; col++){
@@ -150,7 +121,8 @@ Vector4 Matrix4::operator*(const Vector4& v){
     double res2 = m[1][0] * v.x + m[1][1] * v.y + m[1][2] * v.z + m[1][3] * v.w;
     double res3 = m[2][0] * v.x + m[2][1] * v.y + m[2][2] * v.z + m[2][3] * v.w;
     double res4 = m[3][0] * v.x + m[3][1] * v.y + m[3][2] * v.z + m[3][3] * v.w;
-    return Vector4(res1, res2, res3, res4);
+    Vector4 *result = new Vector4(res1,res2,res3,res4);
+    return *result;
 }
 
 //make rotation matrix about X axis with angle in degrees (note that the sin/cos functions in C++ expect radians so you need to convert to radians within the function
@@ -213,29 +185,6 @@ void Matrix4::makeTranslate(double tx, double ty, double tz){
     this->m[0][3] = tx;
     this->m[1][3] = ty;
     this->m[2][3] = tz;
-}
-
-//make a projection matrix
-void Matrix4::makeProjectionMatrix(double fov, double aspect_ratio,double near, double far){
-    identity();
-    fov = fov / 180.0 * M_PI;
-    this->m[0][0]= 1/(aspect_ratio*tan(fov/2));
-    this->m[1][1] = 1/tan(fov/2);
-    this->m[2][2] = (near+far)/(near-far);
-    this->m[2][3] = 2*near*far/(near-far);
-    this->m[3][2] = -1;
-}
-
-//make viewport matrix
-void Matrix4::makeViewportMatrix(double x0,double x1,double y0,double y1){
-    identity();
-    this->m[0][0]=(x1-x0)/2;
-    this->m[0][3]=(x1+x0)/2;
-    this->m[1][1]=(y1-y0)/2;
-    this->m[1][3]=(y0+y1)/2;
-    this->m[2][2]=0.5;
-    this->m[2][3]=0.5;
-    this->m[3][3]=1;
 }
 
 //print the matrix (display all 16 matrix components numerically on the screen in a 4x4 array)
