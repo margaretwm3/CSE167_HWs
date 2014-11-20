@@ -89,6 +89,12 @@ bear::bear(){
                     light.light_position[2]);
     m2w_light = t;
     mat = Material();
+    
+    t.identity();
+    t.makeTranslate(light.light_position_s[0],
+                    light.light_position_s[1],
+                    light.light_position_s[2]);
+    m2w_spotLight = t;
 }
 
 Matrix4& bear::getMatrix()

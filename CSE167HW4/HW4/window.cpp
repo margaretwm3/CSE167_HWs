@@ -329,6 +329,7 @@ void Window::displayBearCallback(){
     glMatrixMode(GL_MODELVIEW);
     glClearColor(0, 0, 0, 0);
     glEnable(GL_DEPTH_TEST);
+    glDisable(GL_COLOR_MATERIAL);
     
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -342,6 +343,15 @@ void Window::displayBearCallback(){
         bear_light_m2w .transpose();
         glLoadMatrixd(bear_light_m2w.getPointer());
         glutSolidSphere(0.5,20,20);// for point light
+    glPopMatrix();
+    
+    //for spot light
+    glPushMatrix();
+    Matrix4 bear_spotlight_m2w = Globals::bear->m2w_spotLight;
+    bear_spotlight_m2w .transpose();
+    glLoadMatrixd(bear_spotlight_m2w.getPointer());
+    glColor3f(1, 0, 0);
+    glutSolidSphere(0.5,20,20);// for point light
     glPopMatrix();
     
     //lighting model
@@ -359,27 +369,29 @@ void Window::displayBearCallback(){
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     
-    /*
-     GLfloat light1_ambient[] = { 0.2, 0.2, 0.2, 1.0 };
-     GLfloat light1_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
-     GLfloat light1_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-     GLfloat light1_position[] = { -2.0, 2.0, 1.0, 1.0 };
-     GLfloat spot_direction[] = { -1.0, -1.0, 0.0 };
-     
-     glLightfv(GL_LIGHT1, GL_AMBIENT, light1_ambient);
-     glLightfv(GL_LIGHT1, GL_DIFFUSE, light1_diffuse);
-     glLightfv(GL_LIGHT1, GL_SPECULAR, light1_specular);
-     glLightfv(GL_LIGHT1, GL_POSITION, light1_position);
-     glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 1.5);
-     glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.5);
-     glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.2);
-     
-     glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 45.0);
-     glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spot_direction);
-     glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 100);
-     
-     glEnable(GL_LIGHT1);
-     */
+    GLfloat light1_ambient[] = { 0.2, 0.2, 0.2, 1.0 };
+    GLfloat light1_diffuse[] = { 1.0,1.0, 1.0,1.0 };
+    GLfloat light1_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+    Vector3 origin = Vector3(0,0,0);
+    Vector3 source = Vector3(Globals::bear->light.light_position_s[0],
+                             Globals::bear->light.light_position_s[1],
+                             Globals::bear->light.light_position_s[2]);
+    Vector3 spotLightDir = origin - source;
+    spotLightDir.normalize(); // need to normalize
+    //make a GLfloat array, w = 0 because it is a vector
+    GLfloat spot_dir[] = {float(spotLightDir.x), float(spotLightDir.y),
+        float(spotLightDir.z),0.0};
+    
+    glLightfv(GL_LIGHT1, GL_AMBIENT, light1_ambient);
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, light1_diffuse);
+    glLightfv(GL_LIGHT1, GL_SPECULAR, light1_specular);
+    glLightfv(GL_LIGHT1, GL_POSITION, Globals::bear->light.light_position_s);
+    glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 0.5);
+    
+    glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 60.0);
+    glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spot_dir);
+    glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 100);
+    glEnable(GL_LIGHT1);
     
     glPopMatrix();
 
@@ -829,6 +841,32 @@ void Window::processBearNormalKeys(unsigned char key, int x, int y){
         ++Globals::bear->light.light_position[2];
         Globals::bear->update();
         cout << "light pos z : " << Globals::bear->light.light_position[2] << endl;
+    }
+    else if(key == '3'){
+        --Globals::bear->light.light_position_s[0];
+        Globals::bear->update();
+        cout << "light pos z : " << Globals::bear->light.light_position_s[0] << endl;
+    }else if(key == '4'){
+        ++Globals::bear->light.light_position_s[0];
+        Globals::bear->update();
+        cout << "light pos z : " <<
+        Globals::bear->light.light_position_s[0] << endl;
+    }
+    else if(key == '5'){
+        --Globals::bear->light.light_position_s[1];
+        Globals::bear->update();
+        cout << "light pos z : " <<
+        Globals::bear->light.light_position_s[1] << endl;
+    }else if(key == '6'){
+        ++Globals::bear->light.light_position_s[1];
+        Globals::bear->update();
+    }
+    else if(key == '7'){
+        --Globals::dragon->light.light_position_s[2];
+        Globals::bear->update();
+    }else if(key == '8'){
+        ++Globals::bear->light.light_position_s[2];
+        Globals::bear->update();
     }
 }
 
