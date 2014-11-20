@@ -8,7 +8,9 @@
 #include "Matrix4.h"
 #include "Vector3.h"
 #include "Vector4.h"
+#include "bunny.h"
 #include "main.h"
+#include "bear.h"
 
 using namespace std;
 
@@ -18,6 +20,10 @@ namespace Globals
   Robot robot = Robot();
   bool boundingBox = false;
   MatrixTransform root = MatrixTransform();
+  class bunny bunny;
+  class dragon dragon;
+  class bear bear;
+   Light light;
 };
 
 
@@ -27,7 +33,10 @@ int main(int argc, char *argv[])
   float shininess[] = {100.0};
   float position[]  = {0.0, 10.0, 1.0, 0.0};	// lightsource position
     
-
+  Globals::bunny = bunny();
+  Globals::dragon = dragon();
+  Globals::bear = bear();
+  Globals::light = Light();
   
   glutInit(&argc, argv);      	      	      // initialize GLUT
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);   // open an OpenGL context with double buffering, RGB colors, and depth buffering
@@ -54,6 +63,8 @@ int main(int argc, char *argv[])
   glLightfv(GL_LIGHT0, GL_POSITION, position);
   glDisable(GL_LIGHTING); //turn the light off
   glEnable(GL_LIGHT0);
+  glEnable(GL_NORMALIZE);
+  glLightModelf(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
   
     
   // Install callback functions:
@@ -64,12 +75,11 @@ int main(int argc, char *argv[])
 
   // keyboard key
   glutKeyboardFunc(Window::processNormalKeys);
-  //glutSpecialFunc(Window::processSpecialKeys);
+  glutSpecialFunc(Window::processSpecialKeys);
 
  //Enter GLUT event processing cycle
   glutMainLoop();
-
-    
+  
   return 0;
 }
 

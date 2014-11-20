@@ -14,10 +14,11 @@
 using namespace std;
 
 class Vector3{
-    protected:
-        double x,y,z;   // vector elements;
+   
+    
     
     public:
+        double x,y,z;   // vector elements;
         //constructor with three parameters for three vecotr coordinates
         Vector3(double x, double y, double z);
     
@@ -50,6 +51,9 @@ class Vector3{
         friend class Matrix4;
         friend class Camera;
         friend class Window;
+        friend class bunny;
+        friend class dragon;
+        friend class bear;
 };
 
 

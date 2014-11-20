@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F0BFFA8E1A1B7E9A009960C8 /* Material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F0BFFA8C1A1B7E9A009960C8 /* Material.cpp */; };
+		F0BFFA911A1C4C65009960C8 /* Light.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F0BFFA8F1A1C4C65009960C8 /* Light.cpp */; };
 		F0C7B91D1A15B52B0088C876 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0C7B91C1A15B52B0088C876 /* GLUT.framework */; };
 		F0C7B91F1A15B5310088C876 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0C7B91E1A15B5310088C876 /* OpenGL.framework */; };
 		F0C7B9221A15B5A00088C876 /* Vector3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F0C7B9201A15B5A00088C876 /* Vector3.cpp */; };
@@ -22,6 +24,9 @@
 		F0C7B9421A15B5E00088C876 /* Matrix4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F0C7B9381A15B5E00088C876 /* Matrix4.cpp */; };
 		F0C7B9431A15B5E00088C876 /* Sphere.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F0C7B93A1A15B5E00088C876 /* Sphere.cpp */; };
 		F0C7B9461A15B5F60088C876 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F0C7B9441A15B5F60088C876 /* main.cpp */; };
+		F0C7B9491A1A7D300088C876 /* bunny.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F0C7B9471A1A7D2F0088C876 /* bunny.cpp */; };
+		F0C7B94C1A1A7D460088C876 /* dragon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F0C7B94A1A1A7D460088C876 /* dragon.cpp */; };
+		F0C7B94F1A1AF4AC0088C876 /* bear.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F0C7B94D1A1AF4AC0088C876 /* bear.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -37,6 +42,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		F0BFFA8C1A1B7E9A009960C8 /* Material.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Material.cpp; sourceTree = "<group>"; };
+		F0BFFA8D1A1B7E9A009960C8 /* Material.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Material.h; sourceTree = "<group>"; };
+		F0BFFA8F1A1C4C65009960C8 /* Light.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Light.cpp; sourceTree = "<group>"; };
+		F0BFFA901A1C4C65009960C8 /* Light.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Light.h; sourceTree = "<group>"; };
 		F0C7B9121A15B5070088C876 /* HW4 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = HW4; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0C7B91C1A15B52B0088C876 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		F0C7B91E1A15B5310088C876 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
@@ -66,6 +75,12 @@
 		F0C7B93C1A15B5E00088C876 /* Node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Node.h; sourceTree = "<group>"; };
 		F0C7B9441A15B5F60088C876 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		F0C7B9451A15B5F60088C876 /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
+		F0C7B9471A1A7D2F0088C876 /* bunny.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bunny.cpp; sourceTree = "<group>"; };
+		F0C7B9481A1A7D2F0088C876 /* bunny.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bunny.h; sourceTree = "<group>"; };
+		F0C7B94A1A1A7D460088C876 /* dragon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dragon.cpp; sourceTree = "<group>"; };
+		F0C7B94B1A1A7D460088C876 /* dragon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dragon.h; sourceTree = "<group>"; };
+		F0C7B94D1A1AF4AC0088C876 /* bear.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bear.cpp; sourceTree = "<group>"; };
+		F0C7B94E1A1AF4AC0088C876 /* bear.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bear.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +99,16 @@
 		F0C7B9091A15B5070088C876 = {
 			isa = PBXGroup;
 			children = (
+				F0BFFA8F1A1C4C65009960C8 /* Light.cpp */,
+				F0BFFA901A1C4C65009960C8 /* Light.h */,
+				F0BFFA8C1A1B7E9A009960C8 /* Material.cpp */,
+				F0BFFA8D1A1B7E9A009960C8 /* Material.h */,
+				F0C7B94D1A1AF4AC0088C876 /* bear.cpp */,
+				F0C7B94E1A1AF4AC0088C876 /* bear.h */,
+				F0C7B94A1A1A7D460088C876 /* dragon.cpp */,
+				F0C7B94B1A1A7D460088C876 /* dragon.h */,
+				F0C7B9471A1A7D2F0088C876 /* bunny.cpp */,
+				F0C7B9481A1A7D2F0088C876 /* bunny.h */,
 				F0C7B92B1A15B5D00088C876 /* Camera.h */,
 				F0C7B9301A15B5E00088C876 /* Cube_Geode.h */,
 				F0C7B9351A15B5E00088C876 /* Geode.h */,
@@ -188,9 +213,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F0BFFA911A1C4C65009960C8 /* Light.cpp in Sources */,
 				F0C7B9281A15B5C60088C876 /* Robot.cpp in Sources */,
 				F0C7B93F1A15B5E00088C876 /* Group.cpp in Sources */,
 				F0C7B9221A15B5A00088C876 /* Vector3.cpp in Sources */,
+				F0C7B94F1A1AF4AC0088C876 /* bear.cpp in Sources */,
 				F0C7B92D1A15B5D00088C876 /* window.cpp in Sources */,
 				F0C7B9461A15B5F60088C876 /* main.cpp in Sources */,
 				F0C7B93D1A15B5E00088C876 /* Cube_Geode.cpp in Sources */,
@@ -199,7 +226,10 @@
 				F0C7B9411A15B5E00088C876 /* MatrixTransform.cpp in Sources */,
 				F0C7B92E1A15B5D00088C876 /* Camera.cpp in Sources */,
 				F0C7B9421A15B5E00088C876 /* Matrix4.cpp in Sources */,
+				F0C7B94C1A1A7D460088C876 /* dragon.cpp in Sources */,
 				F0C7B9431A15B5E00088C876 /* Sphere.cpp in Sources */,
+				F0C7B9491A1A7D300088C876 /* bunny.cpp in Sources */,
+				F0BFFA8E1A1B7E9A009960C8 /* Material.cpp in Sources */,
 				F0C7B93E1A15B5E00088C876 /* Node.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -314,6 +344,7 @@
 				F0C7B91B1A15B5070088C876 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

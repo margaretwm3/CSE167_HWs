@@ -4,7 +4,11 @@
 
 #include "Camera.h"
 #include "Robot.h"
+#include "bunny.h"
+#include "dragon.h"
+#include "bear.h"
 #include "MatrixTransform.h"
+#include "Light.h"
 
 namespace Globals
 {
@@ -12,6 +16,10 @@ namespace Globals
     extern Robot robot;
     extern bool boundingBox;
     extern MatrixTransform root;
+    extern bunny bunny;
+    extern dragon dragon;
+    extern bear bear;
+    extern Light light;
 };
 
 #endif
