@@ -201,6 +201,7 @@ void Window::displayDragonCallback(){
     glMatrixMode(GL_MODELVIEW);
     glClearColor(0, 0, 0, 0);
     glEnable(GL_DEPTH_TEST);
+    glDisable(GL_COLOR_MATERIAL);
     
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -213,6 +214,15 @@ void Window::displayDragonCallback(){
     Matrix4 dragon_light_m2w = Globals::dragon->m2w_light;
     dragon_light_m2w .transpose();
     glLoadMatrixd(dragon_light_m2w.getPointer());
+    glutSolidSphere(0.5,20,20);// for point light
+    glPopMatrix();
+    
+    //for spot light
+    glPushMatrix();
+    Matrix4 dragon_spotlight_m2w = Globals::dragon->m2w_spotLight;
+    dragon_spotlight_m2w .transpose();
+    glLoadMatrixd(dragon_spotlight_m2w.getPointer());
+    glColor3f(1, 0, 0);
     glutSolidSphere(0.5,20,20);// for point light
     glPopMatrix();
     
@@ -231,29 +241,31 @@ void Window::displayDragonCallback(){
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     
-    /*
-     GLfloat light1_ambient[] = { 0.2, 0.2, 0.2, 1.0 };
-     GLfloat light1_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
-     GLfloat light1_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-     GLfloat light1_position[] = { -2.0, 2.0, 1.0, 1.0 };
-     GLfloat spot_direction[] = { -1.0, -1.0, 0.0 };
-     
-     glLightfv(GL_LIGHT1, GL_AMBIENT, light1_ambient);
-     glLightfv(GL_LIGHT1, GL_DIFFUSE, light1_diffuse);
-     glLightfv(GL_LIGHT1, GL_SPECULAR, light1_specular);
-     glLightfv(GL_LIGHT1, GL_POSITION, light1_position);
-     glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 1.5);
-     glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.5);
-     glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.2);
-     
-     glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 45.0);
-     glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spot_direction);
-     glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 100);
-     
-     glEnable(GL_LIGHT1);
-     */
+    GLfloat light1_ambient[] = { 0.2, 0.2, 0.2, 1.0 };
+    GLfloat light1_diffuse[] = { 1.0,1.0, 1.0,1.0 };
+    GLfloat light1_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+    Vector3 origin = Vector3(0,0,0);
+    Vector3 source = Vector3(Globals::dragon->light.light_position_s[0],
+                             Globals::dragon->light.light_position_s[1],
+                             Globals::dragon->light.light_position_s[2]);
+    Vector3 spotLightDir = origin - source;
+    spotLightDir.normalize(); // need to normalize
+    //make a GLfloat array, w = 0 because it is a vector
+    GLfloat spot_dir[] = {float(spotLightDir.x), float(spotLightDir.y),
+        float(spotLightDir.z),0.0};
     
+    glLightfv(GL_LIGHT1, GL_AMBIENT, light1_ambient);
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, light1_diffuse);
+    glLightfv(GL_LIGHT1, GL_SPECULAR, light1_specular);
+    glLightfv(GL_LIGHT1, GL_POSITION, Globals::dragon->light.light_position_s);
+    glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 0.5);
+    
+    glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 60.0);
+    glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spot_dir);
+    glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 100);
+    glEnable(GL_LIGHT1);
     glPopMatrix();
+    
     Matrix4 glmatrix;
     glmatrix = Globals::dragon->getMatrix();
     double aspectRatio = (double)width/height;
@@ -738,6 +750,37 @@ void Window::processDragonNormalKeys(unsigned char key, int x, int y){
         ++Globals::dragon->light.light_position[2];
         Globals::dragon->update();
         cout << "light pos z : " << Globals::dragon->light.light_position[2] << endl;
+    }
+    else if(key == '3'){
+        --Globals::dragon->light.light_position_s[0];
+        Globals::dragon->update();
+        cout << "light pos z : " << Globals::dragon->light.light_position_s[0] << endl;
+    }else if(key == '4'){
+        ++Globals::dragon->light.light_position_s[0];
+        Globals::dragon->update();
+        cout << "light pos z : " <<
+           Globals::dragon->light.light_position_s[0] << endl;
+    }
+    else if(key == '5'){
+        --Globals::dragon->light.light_position_s[1];
+        Globals::dragon->update();
+        cout << "light pos z : " <<
+          Globals::dragon->light.light_position_s[1] << endl;
+    }else if(key == '6'){
+        ++Globals::dragon->light.light_position_s[1];
+        Globals::dragon->update();
+        cout << "light pos z : " << Globals::dragon->light.light_position_s[1] << endl;
+    }
+    else if(key == '7'){
+        --Globals::dragon->light.light_position_s[2];
+        Globals::dragon->update();
+        cout << "light pos z : " <<
+          Globals::dragon->light.light_position_s[2] << endl;
+    }else if(key == '8'){
+        ++Globals::dragon->light.light_position_s[2];
+        Globals::dragon->update();
+        cout << "light pos z : " <<
+          Globals::dragon->light.light_position_s[2] << endl;
     }
 }
 void Window::processBearNormalKeys(unsigned char key, int x, int y){
