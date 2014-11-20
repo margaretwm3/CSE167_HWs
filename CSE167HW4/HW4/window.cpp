@@ -3,6 +3,7 @@
 #include <GLUT/glut.h>
 
 #include "Window.h"
+#include "shader.h"
 #include "main.h"
 #include "MatrixTransform.h"
 #include "Robot.h"
@@ -29,6 +30,8 @@ bool displayArmy = false;
 bool bunny = false;
 bool dragon = false;
 bool bear = false;
+
+bool shader_on = false;
 
 //call the camera set function to set e,d,up
 Vector3 *e;
@@ -65,6 +68,12 @@ void Window::idleBearCallback(){
 
 void Window::displayBunnyCallback(){
     cerr << "displayBunnyCallback called " << endl;
+    if(shader_on){
+        Globals::shader.bind();
+    }
+    else{
+        Globals::shader.unbind();
+    }
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glClearColor(0, 0, 0, 0);
@@ -674,6 +683,17 @@ void Window::processBunnyNormalKeys(unsigned char key, int x, int y){
     else if(key== 'r'){
         Globals::bunny->spin(1.0);
         displayBunnyCallback();
+    }
+    else if(key == 'p'){
+        shader_on = !shader_on;
+        /*
+        if(shader_on){
+            Shader shader =
+                Shader("diffuse_shading.vert","diffuse_shading.frag",true);
+        }else{
+            Shader shader =
+               Shader("diffuse_shading.vert","diffuse_shading.frag",false);
+       }*/
     }
     else if(key == '1'){
         --Globals::bunny->light.light_position[2];

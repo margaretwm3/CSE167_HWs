@@ -7,6 +7,7 @@
 #include "bunny.h"
 #include "dragon.h"
 #include "bear.h"
+#include "shader.h"
 #include "MatrixTransform.h"
 #include "Light.h"
 
@@ -19,7 +20,7 @@ namespace Globals
     extern bunny *bunny;
     extern dragon *dragon;
     extern bear *bear;
-   
+    extern Shader shader;
 };
 
 #endif

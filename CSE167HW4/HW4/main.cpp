@@ -8,6 +8,7 @@
 #include "Matrix4.h"
 #include "Vector3.h"
 #include "Vector4.h"
+#include "shader.h"
 #include "bunny.h"
 #include "main.h"
 #include "bear.h"
@@ -23,6 +24,7 @@ namespace Globals
   class bunny *bunny;
   class dragon *dragon;
   class bear *bear;
+  Shader shader = Shader("diffuse_shaing.vect","diffuse_shading.frag",false);
 };
 
 
@@ -35,8 +37,7 @@ int main(int argc, char *argv[])
   Globals::bunny = new bunny();
   Globals::dragon = new dragon();
   Globals::bear = new bear();
-
-  
+    
   glutInit(&argc, argv);      	      	      // initialize GLUT
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);   // open an OpenGL context with double buffering, RGB colors, and depth buffering
   glutInitWindowSize(Window::width, Window::height);      // set initial window size
