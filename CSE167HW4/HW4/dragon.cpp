@@ -80,6 +80,13 @@ dragon::dragon(){
     center_z = 0.5*(z_smallest + z_biggest);
     
     light = Light();
+    Matrix4 t = Matrix4();
+    t.identity();
+    t.makeTranslate(light.light_position[0],
+                    light.light_position[1],
+                    light.light_position[2]);
+    m2w_light = t;
+    mat = Material();
 }
 
 Matrix4& dragon::getMatrix()
@@ -142,4 +149,11 @@ void dragon::moveOutOf(){
     tmp.makeTranslate(0.0,0.0,-1.0);
     //The multiplication order is important
     model2world = tmp * model2world;
+}
+
+void dragon::update(){
+    Matrix4 t = Matrix4();
+    t.identity();
+    t.makeTranslate(light.light_position[0], light.light_position[1], light.light_position[2]);
+    m2w_light = t;
 }

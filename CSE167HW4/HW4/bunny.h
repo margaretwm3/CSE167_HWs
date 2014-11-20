@@ -49,7 +49,6 @@ public:
     Light light;
     Matrix4 m2w_light;
     void update();
-    
     Material mat;
 };
 
