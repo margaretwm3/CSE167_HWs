@@ -38,13 +38,11 @@ Vector3 *up;
 vector<Vector3>position;
 vector<Vector3>normal;
 vector<Vector3>color;
-
 GLfloat light_ambient[] = { 0.0, 0.0, 0.0, 1.0 };
 GLfloat light_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
 GLfloat light_specular[] = { 1.0, 1.0, 1.0, 1.0 };
 //create three seperate light positions
 GLfloat light_position[] = { 1.0 , 1.0, 1.0, 1.0 };
-
 
 int movement; //switch between different states
 Vector3 lastPoint = Vector3(0,0,0); // class variable last point
@@ -70,22 +68,23 @@ void Window::idleBearCallback(){
 }
 
 void Window::displayBunnyCallback(){
-
     cerr << "displayBunnyCallback called " << endl;
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    
     glMatrixMode(GL_MODELVIEW);
     glDisable(GL_LIGHTING);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_POINT_SMOOTH);
+    glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+    
     glPushMatrix();
         Matrix4 tmp = Matrix4();
-    tmp.identity();
+    tmp.identity();//make it stationary
     tmp.makeTranslate(Globals::light.position->x, Globals::light.position->y, Globals::light.position->z);
     tmp.transpose();
     glLoadMatrixd(tmp.getPointer());
     glutSolidSphere(0.5,20,20);// for point light
     glPopMatrix();
-    
     
     light_position[0] = Globals::light.position->x;
     light_position[1] = Globals::light.position->y;
@@ -97,8 +96,29 @@ void Window::displayBunnyCallback(){
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glEnable(GL_DEPTH_TEST);
-  
     
+    /*
+    GLfloat light1_ambient[] = { 0.2, 0.2, 0.2, 1.0 };
+    GLfloat light1_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
+    GLfloat light1_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+    GLfloat light1_position[] = { -2.0, 2.0, 1.0, 1.0 };
+    GLfloat spot_direction[] = { -1.0, -1.0, 0.0 };
+    
+    glLightfv(GL_LIGHT1, GL_AMBIENT, light1_ambient);
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, light1_diffuse);
+    glLightfv(GL_LIGHT1, GL_SPECULAR, light1_specular);
+    glLightfv(GL_LIGHT1, GL_POSITION, light1_position);
+    glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 1.5);
+    glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.5);
+    glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.2);
+    
+    glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 45.0);
+    glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spot_direction);
+    glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 100);
+    
+    glEnable(GL_LIGHT1);
+     */
+  
     cout << "global light position x "<<Globals::light.position->x<< endl;
     cout << "global light position y "<<Globals::light.position->y << endl;
     cout << "global light position z "<<Globals::light.position->z << endl;
@@ -106,7 +126,6 @@ void Window::displayBunnyCallback(){
     cout << "light position y "<<light_position[1] << endl;
     cout << "light position z "<<light_position[2] << endl;
   
-    GLfloat no_mat[] = { 0.0, 0.0, 0.0, 1.0 };
     GLfloat mat_ambient[] = { 0.7, 0.7, 0.7, 1.0 };
     GLfloat mat_diffuse[] = { 0.1, 0.1, 0.1, 1.0 };
     GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
@@ -115,8 +134,7 @@ void Window::displayBunnyCallback(){
     GLfloat high_shininess[] = { 100.0 };
     GLfloat mat_emission[] = {0.3, 0.2, 0.2, 0.0};
     GLfloat mat_ambient_color[] = { 0.f, .8f, .8f, 1.f};
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mat_ambient_color);
-    
+    glClearColor(0, 0, 0, 0);
     //lighting model for bunny
     Material bunny = Material(GL_FRONT_AND_BACK);
     //bunny.setColorIndexes(mat_ambient_color);
@@ -145,7 +163,6 @@ void Window::displayBunnyCallback(){
     if(z_ratio < scaling){
         scaling = z_ratio;
     }
-    
     scalingMatrix.makeScale(0.7*scaling, 0.7*scaling,0.7*scaling);
     
     Matrix4 translation = Matrix4();
@@ -160,7 +177,6 @@ void Window::displayBunnyCallback(){
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_POINT_SMOOTH);
     glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
-   
     
     for (int i = 0;i < Globals::bunny.face_normal.size();i++)
     {
@@ -183,29 +199,32 @@ void Window::displayBunnyCallback(){
     glEnd();
     glFlush();
     glutSwapBuffers();
-    glPopMatrix();
+    //glPopMatrix();
 }
 
 void Window::displayDragonCallback(){
     cerr << "displayDragonCallback called " << endl;
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glMatrixMode(GL_MODELVIEW);
+    glDisable(GL_LIGHTING);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_POINT_SMOOTH);
     glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
     
-    glDisable(GL_LIGHTING);
-   /*
     glPushMatrix();
     Matrix4 tmp = Matrix4();
-    tmp.identity();
+    tmp.identity();//make it stationary
     tmp.makeTranslate(Globals::light.position->x, Globals::light.position->y, Globals::light.position->z);
     tmp.transpose();
     glLoadMatrixd(tmp.getPointer());
     glutSolidSphere(0.5,20,20);// for point light
     glPopMatrix();
-*/
-    glClearColor(0, 0, 0, 0);
     
+    light_position[0] = Globals::light.position->x;
+    light_position[1] = Globals::light.position->y;
+    light_position[2] = Globals::light.position->z;
     glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
     glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
@@ -213,8 +232,7 @@ void Window::displayDragonCallback(){
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glEnable(GL_DEPTH_TEST);
-    
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     
     GLfloat no_mat[] = { 0.0, 0.0, 0.0, 1.0 };
     GLfloat mat_ambient[] = { 0.7, 0.7, 0.7, 1.0 };
@@ -226,10 +244,7 @@ void Window::displayDragonCallback(){
     GLfloat high_shininess[] = { 100.0 };
     GLfloat mat_emission[] = {0.3, 0.2, 0.2, 0.0};
 
-    /*  draw sphere in first row, first column
-     *  diffuse reflection only; no ambient or specular
-     */
-    glPushMatrix();
+ 
     //lighting model for dragon
     Material dragon = Material(GL_FRONT_AND_BACK);
     dragon.setAmbient(mat_ambient);
@@ -237,7 +252,6 @@ void Window::displayDragonCallback(){
     dragon.setSpecular(mat_specular);
     dragon.setShininess(low_shininess);//dragon low shininess
 
-    glMatrixMode(GL_MODELVIEW);
     Matrix4 glmatrix;
     glmatrix = Globals::dragon.getMatrix();
     double aspectRatio = (double)width/height;
@@ -271,7 +285,6 @@ void Window::displayDragonCallback(){
     
     glmatrix.transpose();
     glLoadMatrixd(glmatrix.getPointer());
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // clear color and depth buffers
 
     
     for (int i = 0;i < Globals::dragon.face_normal.size();i++)
@@ -292,7 +305,7 @@ void Window::displayDragonCallback(){
     glEnd();
     glFlush();
     glutSwapBuffers();
-    glPopMatrix();
+    //glPopMatrix();
 }
 
 void Window::displayBearCallback(){

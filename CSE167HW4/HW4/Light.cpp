@@ -20,11 +20,13 @@ Light::Light(){
     fExpAtt = 0.00008;
 }
 
+//create spot light
 void Light::setLightPosition(float a,float b,float c){
     position->x = a;
     position->y = b;
     position->z = c;
 }
+
 
 
 Vector4 Light::getPointLightColor(Light ptLight, Vector4 vWorldPos, Vector3 vNormal){
