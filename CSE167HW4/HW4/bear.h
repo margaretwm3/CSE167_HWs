@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include "Matrix4.h"
 #include "Vector3.h"
+#include "Material.h"
 #include "Light.h"
 #include <iostream>
 #include <vector>
@@ -44,5 +45,8 @@ public:
     //calculate the center of the model
     double center_x, center_y,center_z;
     Light light;
+    Matrix4 m2w_light;
+    void update();
+    Material mat;
 };
 #endif /* defined(__HW4__bear__) */
