@@ -87,6 +87,15 @@ bunny::bunny(){
     center_x = 0.5*(x_smallest + x_biggest);
     center_y = 0.5*(y_smallest + y_biggest);
     center_z = 0.5*(z_smallest + z_biggest);
+    
+    light = Light();
+    Matrix4 t = Matrix4();
+    t.identity();
+    t.makeTranslate(light.light_position[0],
+                    light.light_position[1],
+                    light.light_position[2]);
+    m2w_light = t;
+    mat = Material();
 }
 
 Matrix4& bunny::getMatrix()
@@ -150,4 +159,11 @@ void bunny::moveOutOf(){
     tmp.makeTranslate(0.0,0.0,-1.0);
     //The multiplication order is important
     model2world = tmp * model2world;
+}
+
+void bunny::update(){
+    Matrix4 t = Matrix4();
+    t.identity();
+    t.makeTranslate(light.light_position[0], light.light_position[1], light.light_position[2]);
+    m2w_light = t;
 }

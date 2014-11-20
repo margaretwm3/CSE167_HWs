@@ -20,10 +20,9 @@ namespace Globals
   Robot robot = Robot();
   bool boundingBox = false;
   MatrixTransform root = MatrixTransform();
-  class bunny bunny;
-  class dragon dragon;
-  class bear bear;
-   Light light;
+  class bunny *bunny;
+  class dragon *dragon;
+  class bear *bear;
 };
 
 
@@ -33,10 +32,10 @@ int main(int argc, char *argv[])
   float shininess[] = {100.0};
   float position[]  = {0.0, 10.0, 1.0, 0.0};	// lightsource position
     
-  Globals::bunny = bunny();
-  Globals::dragon = dragon();
-  Globals::bear = bear();
-  Globals::light = Light();
+  Globals::bunny = new bunny();
+  Globals::dragon = new dragon();
+  Globals::bear = new bear();
+
   
   glutInit(&argc, argv);      	      	      // initialize GLUT
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);   // open an OpenGL context with double buffering, RGB colors, and depth buffering

@@ -16,10 +16,10 @@ namespace Globals
     extern Robot robot;
     extern bool boundingBox;
     extern MatrixTransform root;
-    extern bunny bunny;
-    extern dragon dragon;
-    extern bear bear;
-    extern Light light;
+    extern bunny *bunny;
+    extern dragon *dragon;
+    extern bear *bear;
+   
 };
 
 #endif

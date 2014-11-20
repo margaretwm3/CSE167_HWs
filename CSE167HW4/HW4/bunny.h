@@ -13,6 +13,8 @@
 #include "Matrix4.h"
 #include "Vector3.h"
 #include "Window.h"
+#include "Material.h"
+#include "Light.h"
 #include <iostream>
 #include <vector>
 
@@ -43,6 +45,12 @@ public:
     double z_biggest = 0;
     //calculate the center of the model
     double center_x, center_y,center_z;
+    
+    Light light;
+    Matrix4 m2w_light;
+    void update();
+    
+    Material mat;
 };
 
 #endif /* defined(__CSE167HW1__bunny__) */

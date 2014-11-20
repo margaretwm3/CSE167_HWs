@@ -38,11 +38,7 @@ Vector3 *up;
 vector<Vector3>position;
 vector<Vector3>normal;
 vector<Vector3>color;
-GLfloat light_ambient[] = { 0.0, 0.0, 0.0, 1.0 };
-GLfloat light_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
-GLfloat light_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-//create three seperate light positions
-GLfloat light_position[] = { 1.0 , 1.0, 1.0, 1.0 };
+
 
 int movement; //switch between different states
 Vector3 lastPoint = Vector3(0,0,0); // class variable last point
@@ -71,31 +67,37 @@ void Window::displayBunnyCallback(){
     cerr << "displayBunnyCallback called " << endl;
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
-    glDisable(GL_LIGHTING);
+    glClearColor(0, 0, 0, 0);
+    glEnable(GL_DEPTH_TEST);
+    
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_POINT_SMOOTH);
     glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+    glDisable(GL_LIGHTING);
     
+    //for point light
     glPushMatrix();
-        Matrix4 tmp = Matrix4();
-    tmp.identity();//make it stationary
-    tmp.makeTranslate(Globals::light.position->x, Globals::light.position->y, Globals::light.position->z);
-    tmp.transpose();
-    glLoadMatrixd(tmp.getPointer());
-    glutSolidSphere(0.5,20,20);// for point light
+        Matrix4 bunny_light_m2w = Globals::bunny->m2w_light;
+        bunny_light_m2w .transpose();
+        glLoadMatrixd(bunny_light_m2w.getPointer());
+        glutSolidSphere(0.5,20,20);// for point light
     glPopMatrix();
     
-    light_position[0] = Globals::light.position->x;
-    light_position[1] = Globals::light.position->y;
-    light_position[2] = Globals::light.position->z;
-    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+    //lighting model
+    glPushMatrix();
+    glLoadIdentity();
+    glShadeModel (GL_SMOOTH);
+    
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, Globals::bunny->mat.mat_specular);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, Globals::bunny->mat.mat_shininess);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, Globals::bunny->mat.mat_diffuse);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, Globals::bunny->light.light_ambient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, Globals::bunny->light.light_diffuse);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, Globals::bunny->light.light_specular);
+    glLightfv(GL_LIGHT0, GL_POSITION, Globals::bunny->light.light_position);
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
-    glEnable(GL_DEPTH_TEST);
     
     /*
     GLfloat light1_ambient[] = { 0.2, 0.2, 0.2, 1.0 };
@@ -118,41 +120,19 @@ void Window::displayBunnyCallback(){
     
     glEnable(GL_LIGHT1);
      */
-  
-    cout << "global light position x "<<Globals::light.position->x<< endl;
-    cout << "global light position y "<<Globals::light.position->y << endl;
-    cout << "global light position z "<<Globals::light.position->z << endl;
-    cout << "light position x "<<light_position[0] << endl;
-    cout << "light position y "<<light_position[1] << endl;
-    cout << "light position z "<<light_position[2] << endl;
-  
-    GLfloat mat_ambient[] = { 0.7, 0.7, 0.7, 1.0 };
-    GLfloat mat_diffuse[] = { 0.1, 0.1, 0.1, 1.0 };
-    GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-    GLfloat no_shininess[] = { 0.0 };
-    GLfloat low_shininess[] = { 5.0 };
-    GLfloat high_shininess[] = { 100.0 };
-    GLfloat mat_emission[] = {0.3, 0.2, 0.2, 0.0};
-    GLfloat mat_ambient_color[] = { 0.f, .8f, .8f, 1.f};
-    glClearColor(0, 0, 0, 0);
-    //lighting model for bunny
-    Material bunny = Material(GL_FRONT_AND_BACK);
-    //bunny.setColorIndexes(mat_ambient_color);
-    bunny.setAmbient(mat_ambient);
-    bunny.setDiffuse(mat_diffuse);
-    bunny.setSpecular(mat_specular);
-    bunny.setShininess(high_shininess);//makes bunny more shiny
+
+    glPopMatrix();
     
     Matrix4 glmatrix;
-    glmatrix = Globals::bunny.getMatrix();
+    glmatrix = Globals::bunny->getMatrix();
     double aspectRatio = (double)width/height;
     
     //make a scaling matrix for bunny based on the window height and width
     Matrix4 scalingMatrix = Matrix4();
     scalingMatrix.identity();
-    double x_ratio = (2*(tan(30 * PI/ 180.0) * 20) * aspectRatio)/(Globals::bunny.x_biggest -Globals::bunny.x_smallest);
-    double y_ratio = 2*(tan(30 * PI/ 180.0) * 20)/(Globals::bunny.y_biggest - Globals::bunny.y_smallest);
-    double z_ratio = 40/(Globals::bunny.z_biggest - Globals::bunny.z_smallest);
+    double x_ratio = (2*(tan(30 * PI/ 180.0) * 20) * aspectRatio)/(Globals::bunny->x_biggest -Globals::bunny->x_smallest);
+    double y_ratio = 2*(tan(30 * PI/ 180.0) * 20)/(Globals::bunny->y_biggest - Globals::bunny->y_smallest);
+    double z_ratio = 40/(Globals::bunny->z_biggest - Globals::bunny->z_smallest);
     double scaling=1000;
     
     if(x_ratio < y_ratio){
@@ -165,9 +145,10 @@ void Window::displayBunnyCallback(){
     }
     scalingMatrix.makeScale(0.7*scaling, 0.7*scaling,0.7*scaling);
     
+    glPushMatrix();
     Matrix4 translation = Matrix4();
     translation.identity();
-    translation.makeTranslate(-Globals::bunny.center_x, -Globals::bunny.center_y, -Globals::bunny.center_z);
+    translation.makeTranslate(-Globals::bunny->center_x, -Globals::bunny->center_y, -Globals::bunny->center_z);
     translation.print("translation matrix :");
     glmatrix = glmatrix * scalingMatrix;
     glmatrix = glmatrix * translation;
@@ -178,28 +159,28 @@ void Window::displayBunnyCallback(){
     glEnable(GL_POINT_SMOOTH);
     glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
     
-    for (int i = 0;i < Globals::bunny.face_normal.size();i++)
+    for (int i = 0;i < Globals::bunny->face_normal.size();i++)
     {
         glBegin(GL_TRIANGLES);
-        Vector3 fv = Globals::bunny.face_vertice[i];
-        Vector3 fn = Globals::bunny.face_normal[i];
+        Vector3 fv = Globals::bunny->face_vertice[i];
+        Vector3 fn = Globals::bunny->face_normal[i];
         
-        glColor3f(Globals::bunny.color[fv.x-1].x, Globals::bunny.color[fv.x-1].y, Globals::bunny.color[fv.x-1].z);
-        glNormal3d(Globals::bunny.normal[fn.x-1].x, Globals::bunny.normal[fn.x-1].y,  Globals::bunny.normal[fn.x-1].z);
-        glVertex3d(Globals::bunny.position[fv.x-1].x, Globals::bunny.position[fv.x-1].y, Globals::bunny.position[fv.x-1].z);
+        glColor3f(Globals::bunny->color[fv.x-1].x, Globals::bunny->color[fv.x-1].y, Globals::bunny->color[fv.x-1].z);
+        glNormal3d(Globals::bunny->normal[fn.x-1].x, Globals::bunny->normal[fn.x-1].y,  Globals::bunny->normal[fn.x-1].z);
+        glVertex3d(Globals::bunny->position[fv.x-1].x, Globals::bunny->position[fv.x-1].y, Globals::bunny->position[fv.x-1].z);
         
-        glColor3f(Globals::bunny.color[fv.y-1].x, Globals::bunny.color[fv.y-1].y, Globals::bunny.color[fv.y-1].z);
-        glNormal3d(Globals::bunny.normal[fn.y-1].x, Globals::bunny.normal[fn.y-1].y,  Globals::bunny.normal[fn.y-1].z);
-        glVertex3d(Globals::bunny.position[fv.y-1].x, Globals::bunny.position[fv.y-1].y, Globals::bunny.position[fv.y-1].z);
+        glColor3f(Globals::bunny->color[fv.y-1].x, Globals::bunny->color[fv.y-1].y, Globals::bunny->color[fv.y-1].z);
+        glNormal3d(Globals::bunny->normal[fn.y-1].x, Globals::bunny->normal[fn.y-1].y,  Globals::bunny->normal[fn.y-1].z);
+        glVertex3d(Globals::bunny->position[fv.y-1].x, Globals::bunny->position[fv.y-1].y, Globals::bunny->position[fv.y-1].z);
         
-        glColor3f(Globals::bunny.color[fv.z-1].x, Globals::bunny.color[fv.z-1].y, Globals::bunny.color[fv.z-1].z);
-        glNormal3d(Globals::bunny.normal[fn.z-1].x, Globals::bunny.normal[fn.z-1].y,  Globals::bunny.normal[fn.z-1].z);
-        glVertex3d(Globals::bunny.position[fv.z-1].x, Globals::bunny.position[fv.z-1].y, Globals::bunny.position[fv.z-1].z);
+        glColor3f(Globals::bunny->color[fv.z-1].x, Globals::bunny->color[fv.z-1].y, Globals::bunny->color[fv.z-1].z);
+        glNormal3d(Globals::bunny->normal[fn.z-1].x, Globals::bunny->normal[fn.z-1].y,  Globals::bunny->normal[fn.z-1].z);
+        glVertex3d(Globals::bunny->position[fv.z-1].x, Globals::bunny->position[fv.z-1].y, Globals::bunny->position[fv.z-1].z);
     }
     glEnd();
     glFlush();
     glutSwapBuffers();
-    //glPopMatrix();
+    glPopMatrix();
 }
 
 void Window::displayDragonCallback(){
@@ -212,7 +193,7 @@ void Window::displayDragonCallback(){
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_POINT_SMOOTH);
     glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
-    
+   /*
     glPushMatrix();
     Matrix4 tmp = Matrix4();
     tmp.identity();//make it stationary
@@ -221,18 +202,27 @@ void Window::displayDragonCallback(){
     glLoadMatrixd(tmp.getPointer());
     glutSolidSphere(0.5,20,20);// for point light
     glPopMatrix();
-    
-    light_position[0] = Globals::light.position->x;
-    light_position[1] = Globals::light.position->y;
-    light_position[2] = Globals::light.position->z;
+    */
+    /*
+    glPushMatrix();
+    tmp.identity();
+    Matrix4 translate;
+    translate.makeTranslate(light_position[0], light_position[1], light_position[2]);
+    tmp = tmp * translate;
     glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
     glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+    light_position[0] = Globals::light.position->x;
+    light_position[1] = Globals::light.position->y;
+    light_position[2] = Globals::light.position->z;
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glEnable(GL_DEPTH_TEST);
-
+    tmp.transpose();
+    glLoadMatrixd(tmp.getPointer());
+    glPopMatrix();
+     */
     
     GLfloat no_mat[] = { 0.0, 0.0, 0.0, 1.0 };
     GLfloat mat_ambient[] = { 0.7, 0.7, 0.7, 1.0 };
@@ -243,7 +233,7 @@ void Window::displayDragonCallback(){
     GLfloat low_shininess[] = { 5.0 };
     GLfloat high_shininess[] = { 100.0 };
     GLfloat mat_emission[] = {0.3, 0.2, 0.2, 0.0};
-
+     /*
  
     //lighting model for dragon
     Material dragon = Material(GL_FRONT_AND_BACK);
@@ -251,17 +241,17 @@ void Window::displayDragonCallback(){
     dragon.setDiffuse(mat_diffuse);
     dragon.setSpecular(mat_specular);
     dragon.setShininess(low_shininess);//dragon low shininess
-
+*/
     Matrix4 glmatrix;
-    glmatrix = Globals::dragon.getMatrix();
+    glmatrix = Globals::dragon->getMatrix();
     double aspectRatio = (double)width/height;
     
     //make a scaling matrix for bunny based on the window height and width
     Matrix4 scalingMatrix = Matrix4();
     scalingMatrix.identity();
-    double x_ratio = (2*(tan(30 * PI/ 180.0) * 20) * aspectRatio)/(Globals::dragon.x_biggest -Globals::dragon.x_smallest);
-    double y_ratio = 2*(tan(30 * PI/ 180.0) * 20)/(Globals::dragon.y_biggest - Globals::dragon.y_smallest);
-    double z_ratio = 40/(Globals::dragon.z_biggest - Globals::dragon.z_smallest);
+    double x_ratio = (2*(tan(30 * PI/ 180.0) * 20) * aspectRatio)/(Globals::dragon->x_biggest -Globals::dragon->x_smallest);
+    double y_ratio = 2*(tan(30 * PI/ 180.0) * 20)/(Globals::dragon->y_biggest - Globals::dragon->y_smallest);
+    double z_ratio = 40/(Globals::dragon->z_biggest - Globals::dragon->z_smallest);
     double scaling=1000;
     
     if(x_ratio < y_ratio){
@@ -276,7 +266,7 @@ void Window::displayDragonCallback(){
     
     Matrix4 translation = Matrix4();
     translation.identity();
-    translation.makeTranslate(-Globals::dragon.center_x, -Globals::dragon.center_y, -Globals::dragon.center_z);
+    translation.makeTranslate(-Globals::dragon->center_x, -Globals::dragon->center_y, -Globals::dragon->center_z);
     translation.print("translation matrix :");
     
     //translation.print("translation matrix: ");
@@ -287,20 +277,20 @@ void Window::displayDragonCallback(){
     glLoadMatrixd(glmatrix.getPointer());
 
     
-    for (int i = 0;i < Globals::dragon.face_normal.size();i++)
+    for (int i = 0;i < Globals::dragon->face_normal.size();i++)
     {
         glBegin(GL_TRIANGLES);
-        Vector3 fv = Globals::dragon.face_vertice[i];
-        Vector3 fn = Globals::dragon.face_normal[i];
+        Vector3 fv = Globals::dragon->face_vertice[i];
+        Vector3 fn = Globals::dragon->face_normal[i];
         
-        glNormal3d(Globals::dragon.normal[fn.x-1].x, Globals::dragon.normal[fn.x-1].y,  Globals::dragon.normal[fn.x-1].z);
-        glVertex3d(Globals::dragon.position[fv.x-1].x, Globals::dragon.position[fv.x-1].y, Globals::dragon.position[fv.x-1].z);
+        glNormal3d(Globals::dragon->normal[fn.x-1].x, Globals::dragon->normal[fn.x-1].y,  Globals::dragon->normal[fn.x-1].z);
+        glVertex3d(Globals::dragon->position[fv.x-1].x, Globals::dragon->position[fv.x-1].y, Globals::dragon->position[fv.x-1].z);
         
-        glNormal3d(Globals::dragon.normal[fn.y-1].x, Globals::dragon.normal[fn.y-1].y,  Globals::dragon.normal[fn.y-1].z);
-        glVertex3d(Globals::dragon.position[fv.y-1].x, Globals::dragon.position[fv.y-1].y, Globals::dragon.position[fv.y-1].z);
+        glNormal3d(Globals::dragon->normal[fn.y-1].x, Globals::dragon->normal[fn.y-1].y,  Globals::dragon->normal[fn.y-1].z);
+        glVertex3d(Globals::dragon->position[fv.y-1].x, Globals::dragon->position[fv.y-1].y, Globals::dragon->position[fv.y-1].z);
         
-        glNormal3d(Globals::dragon.normal[fn.z-1].x, Globals::dragon.normal[fn.z-1].y,  Globals::dragon.normal[fn.z-1].z);
-        glVertex3d(Globals::dragon.position[fv.z-1].x, Globals::dragon.position[fv.z-1].y, Globals::dragon.position[fv.z-1].z);
+        glNormal3d(Globals::dragon->normal[fn.z-1].x, Globals::dragon->normal[fn.z-1].y,  Globals::dragon->normal[fn.z-1].z);
+        glVertex3d(Globals::dragon->position[fv.z-1].x, Globals::dragon->position[fv.z-1].y, Globals::dragon->position[fv.z-1].z);
     }
     glEnd();
     glFlush();
@@ -310,6 +300,7 @@ void Window::displayDragonCallback(){
 
 void Window::displayBearCallback(){
     cerr << "displayBearCallback called " << endl;
+    /*
     glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
     glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
@@ -317,6 +308,7 @@ void Window::displayBearCallback(){
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glEnable(GL_DEPTH_TEST);
+     */
     
     /*
     glPushMatrix();
@@ -344,6 +336,7 @@ void Window::displayBearCallback(){
     /*  draw sphere in first row, first column
      *  diffuse reflection only; no ambient or specular
      */
+    /*
     glPushMatrix();
     //lighting model for dragon
     Material bear = Material(GL_FRONT_AND_BACK);
@@ -352,18 +345,18 @@ void Window::displayBearCallback(){
     bear.setDiffuse(mat_diffuse);
     bear.setSpecular(mat_specular);
     bear.setShininess(low_shininess);//makes bunny more shiny
-
+*/
     glMatrixMode(GL_MODELVIEW);
     Matrix4 glmatrix;
-    glmatrix = Globals::bear.getMatrix();
+    glmatrix = Globals::bear->getMatrix();
     double aspectRatio = (double)width/height;
     
     //make a scaling matrix for bunny based on the window height and width
     Matrix4 scalingMatrix = Matrix4();
     scalingMatrix.identity();
-    double x_ratio = (2*(tan(30 * PI/ 180.0) * 20) * aspectRatio)/(Globals::bear.x_biggest -Globals::bear.x_smallest);
-    double y_ratio = 2*(tan(30 * PI/ 180.0) * 20)/(Globals::bear.y_biggest - Globals::bear.y_smallest);
-    double z_ratio = 40/(Globals::bear.z_biggest - Globals::bear.z_smallest);
+    double x_ratio = (2*(tan(30 * PI/ 180.0) * 20) * aspectRatio)/(Globals::bear->x_biggest -Globals::bear->x_smallest);
+    double y_ratio = 2*(tan(30 * PI/ 180.0) * 20)/(Globals::bear->y_biggest - Globals::bear->y_smallest);
+    double z_ratio = 40/(Globals::bear->z_biggest - Globals::bear->z_smallest);
     double scaling=1000;
     
     if(x_ratio < y_ratio){
@@ -382,7 +375,7 @@ void Window::displayBearCallback(){
     
     Matrix4 translation = Matrix4();
     translation.identity();
-    translation.makeTranslate(-Globals::bear.center_x, -Globals::bear.center_y, -Globals::bear.center_z);
+    translation.makeTranslate(-Globals::bear->center_x, -Globals::bear->center_y, -Globals::bear->center_z);
     glmatrix = glmatrix * scalingMatrix;
     glmatrix = glmatrix * translation;
 
@@ -394,21 +387,21 @@ void Window::displayBearCallback(){
     glEnable(GL_POINT_SMOOTH);
     glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
     
-    for (int i = 0;i < Globals::bear.face_normal.size();i++)
+    for (int i = 0;i < Globals::bear->face_normal.size();i++)
     {
         glBegin(GL_TRIANGLES);
-        Vector3 fv = Globals::bear.face_vertice[i];
-        Vector3 fn = Globals::bear.face_normal[i];
+        Vector3 fv = Globals::bear->face_vertice[i];
+        Vector3 fn = Globals::bear->face_normal[i];
         
-        glNormal3d(Globals::bear.normal[fn.x-1].x, Globals::bear.normal[fn.x-1].y,  Globals::bear.normal[fn.x-1].z);
-        glVertex3d(Globals::bear.position[fv.x-1].x, Globals::bear.position[fv.x-1].y, Globals::bear.position[fv.x-1].z);
+        glNormal3d(Globals::bear->normal[fn.x-1].x, Globals::bear->normal[fn.x-1].y,  Globals::bear->normal[fn.x-1].z);
+        glVertex3d(Globals::bear->position[fv.x-1].x, Globals::bear->position[fv.x-1].y, Globals::bear->position[fv.x-1].z);
         
       
-        glNormal3d(Globals::bear.normal[fn.y-1].x, Globals::bear.normal[fn.y-1].y,  Globals::bear.normal[fn.y-1].z);
-        glVertex3d(Globals::bear.position[fv.y-1].x, Globals::bear.position[fv.y-1].y, Globals::bear.position[fv.y-1].z);
+        glNormal3d(Globals::bear->normal[fn.y-1].x, Globals::bear->normal[fn.y-1].y,  Globals::bear->normal[fn.y-1].z);
+        glVertex3d(Globals::bear->position[fv.y-1].x, Globals::bear->position[fv.y-1].y, Globals::bear->position[fv.y-1].z);
         
-        glNormal3d(Globals::bear.normal[fn.z-1].x, Globals::bear.normal[fn.z-1].y,  Globals::bear.normal[fn.z-1].z);
-        glVertex3d(Globals::bear.position[fv.z-1].x, Globals::bear.position[fv.z-1].y, Globals::bear.position[fv.z-1].z);
+        glNormal3d(Globals::bear->normal[fn.z-1].x, Globals::bear->normal[fn.z-1].y,  Globals::bear->normal[fn.z-1].z);
+        glVertex3d(Globals::bear->position[fv.z-1].x, Globals::bear->position[fv.z-1].y, Globals::bear->position[fv.z-1].z);
     }
     glEnd();
     glFlush();
@@ -529,16 +522,55 @@ void Window::processSpecialKeys(int key, int x, int y){
       glutKeyboardFunc(Window::processBearNormalKeys);
     }
     else if(key == GLUT_KEY_LEFT){
-        Globals::light.position->x = --Globals::light.position->x;
-        cout << "light is moving " << endl;
+        if(bunny == true){
+            --Globals::bunny->light.light_position[0];
+            Globals::bunny->update();
+            cout << "light pos x : " <<
+            Globals::bunny->light.light_position[0] << endl;
+        }
+        else if(dragon == true){
+            --Globals::dragon->light.light_position[0];
+        } else if(bear == true){
+            --Globals::bear->light.light_position[0];
+        }
     }
     else if(key == GLUT_KEY_RIGHT){
-        Globals::light.position->x = ++Globals::light.position->x;
+        if(bunny == true){
+            ++Globals::bunny->light.light_position[0];
+            Globals::bunny->update();
+            cout << "light pos x : " <<
+            Globals::bunny->light.light_position[0] << endl;
+        }
+        else if(dragon == true){
+            ++Globals::dragon->light.light_position[0];
+        } else if(bear == true){
+            ++Globals::bear->light.light_position[0];
+        }
     }
     else if(key == GLUT_KEY_UP){
-        Globals::light.position->y = ++Globals::light.position->y;
+        if(bunny == true){
+            ++Globals::bunny->light.light_position[1];
+            Globals::bunny->update();
+            cout << "light pos y : " <<
+                    Globals::bunny->light.light_position[1] << endl;
+        }
+        else if(dragon == true){
+            ++Globals::dragon->light.light_position[1];
+        } else if(bear == true){
+            ++Globals::bear->light.light_position[1];
+        }
     }else if(key == GLUT_KEY_DOWN){
-        Globals::light.position->y = --Globals::light.position->y;
+        if(bunny == true){
+            --Globals::bunny->light.light_position[1];
+             Globals::bunny->update();
+            cout << "light pos y : " <<
+            Globals::bunny->light.light_position[1] << endl;
+        }
+        else if(dragon == true){
+            --Globals::dragon->light.light_position[1];
+        } else if(bear == true){
+            --Globals::bear->light.light_position[1];
+        }
     }
 }
 
@@ -546,51 +578,55 @@ void Window::processBunnyNormalKeys(unsigned char key, int x, int y){
     if(key == 27)
         exit(0);
     else if(key == 's'){
-        Globals::bunny.scale(0.9);
+        Globals::bunny->scale(0.9);
         displayBunnyCallback();
     }
     else if(key == 'S'){
-        Globals::bunny.scale(1.1);
+        Globals::bunny->scale(1.1);
         displayBunnyCallback();
     }
     // move cube left by a small amount
     else if(key == 'x'){
-        Globals::bunny.moveLeft();
+        Globals::bunny->moveLeft();
         //displayBunnyCallback();
     }
     // move the cube right by a small amount
     else if (key == 'X'){
-        Globals::bunny.moveRight();
+        Globals::bunny->moveRight();
         //displayBunnyCallback();
     }
     // move the cube down by a small amount
     else if (key == 'y'){
-       Globals::bunny.moveDown();
+       Globals::bunny->moveDown();
        //displayBunnyCallback();
     }
     // move the cube up by a small amount
     else if (key == 'Y'){
-        Globals::bunny.moveUp();
+        Globals::bunny->moveUp();
         //displayBunnyCallback();
     }
     // move the cube zzinto the screen by a small amount
     else if(key == 'z'){
-        Globals::bunny.moveInto();
+        Globals::bunny->moveInto();
         displayBunnyCallback();
     }
     // move the cube out of the screen by a small amount
     else if(key == 'Z'){
-        Globals::bunny.moveOutOf();
+        Globals::bunny->moveOutOf();
         displayBunnyCallback();
     }
     else if(key== 'r'){
-        Globals::bunny.spin(1.0);
+        Globals::bunny->spin(1.0);
         displayBunnyCallback();
     }
     else if(key == '1'){
-        --Globals::light.position->z;
+        --Globals::bunny->light.light_position[2];
+         Globals::bunny->update();
+         cout << "light pos z : " << Globals::bunny->light.light_position[2] << endl;
     }else if(key == '2'){
-        ++Globals::light.position->z;
+        ++Globals::bunny->light.light_position[2];
+         Globals::bunny->update();
+         cout << "light pos z : " << Globals::bunny->light.light_position[2] << endl;
     }
 }
 
@@ -598,41 +634,49 @@ void Window::processDragonNormalKeys(unsigned char key, int x, int y){
     if(key == 27)
         exit(0);
     else if(key == 's'){
-        Globals::dragon.scale(0.9);
+        Globals::dragon->scale(0.9);
         displayDragonCallback();
     }
     else if(key == 'S'){
-        Globals::dragon.scale(1.1);
+        Globals::dragon->scale(1.1);
         displayDragonCallback();
     }
     // move cube left by a small amount
     else if(key == 'x'){
-        Globals::dragon.moveLeft();
+        Globals::dragon->moveLeft();
     }
     // move the cube right by a small amount
     else if (key == 'X'){
-        Globals::dragon.moveRight();
+        Globals::dragon->moveRight();
     }
     // move the cube down by a small amount
     else if (key == 'y'){
-        Globals::dragon.moveDown();
+        Globals::dragon->moveDown();
     }
     // move the cube up by a small amount
     else if (key == 'Y'){
-        Globals::dragon.moveUp();
+        Globals::dragon->moveUp();
     }
     // move the cube zzinto the screen by a small amount
     else if(key == 'z'){
-        Globals::dragon.moveInto();
+        Globals::dragon->moveInto();
         displayDragonCallback();
     }
     // move the cube out of the screen by a small amount
     else if(key == 'Z'){
-        Globals::dragon.moveOutOf();
+        Globals::dragon->moveOutOf();
         displayDragonCallback();
     }
     else if(key== 'r'){
-        Globals::dragon.spin(1.0);
+        Globals::dragon->spin(1.0);
+        displayDragonCallback();
+    }
+    else if(key == '1'){
+        --Globals::dragon->light.light_position[2];
+       
+        displayDragonCallback();
+    }else if(key == '2'){
+        ++Globals::dragon->light.light_position[2];
         displayDragonCallback();
     }
 }
@@ -640,39 +684,39 @@ void Window::processBearNormalKeys(unsigned char key, int x, int y){
     if(key == 27)
         exit(0);
     else if(key == 's'){
-        Globals::bear.scale(0.9);
+        Globals::bear->scale(0.9);
         displayBearCallback();
     }
     else if(key == 'S'){
-        Globals::bear.scale(1.1);
+        Globals::bear->scale(1.1);
         displayBearCallback();
     }
     // move cube left by a small amount
     else if(key == 'x'){
-        Globals::bear.moveLeft();
+        Globals::bear->moveLeft();
     }
     // move the cube right by a small amount
     else if (key == 'X'){
-        Globals::bear.moveRight();
+        Globals::bear->moveRight();
     }
     // move the cube down by a small amount
     else if (key == 'y'){
-        Globals::bear.moveDown();
+        Globals::bear->moveDown();
     }
     // move the cube up by a small amount
     else if (key == 'Y'){
-        Globals::bear.moveUp();
+        Globals::bear->moveUp();
     }
     // move the cube zzinto the screen by a small amount
     else if(key == 'z'){
-        Globals::bear.moveInto();
+        Globals::bear->moveInto();
     }
     // move the cube out of the screen by a small amount
     else if(key == 'Z'){
-        Globals::bear.moveOutOf();
+        Globals::bear->moveOutOf();
     }
     else if(key== 'r'){
-        Globals::bear.spin(1.0);
+        Globals::bear->spin(1.0);
     }
 }
 
@@ -687,7 +731,7 @@ void Window::processNormalKeys(unsigned char key, int x, int y){
     else if(key == 's'){
       //Globals::robot.scaling(0.9);
       //displayCallback();
-     Globals::bunny.scale(0.9);
+     Globals::bunny->scale(0.9);
      displayBunnyCallback();
     }
     else if(key == 'S'){
@@ -695,7 +739,7 @@ void Window::processNormalKeys(unsigned char key, int x, int y){
       Globals::robot.scaling(1.1);
       displayCallback();
       */
-        Globals::bunny.scale(1.1);
+        Globals::bunny->scale(1.1);
         displayBunnyCallback();
     }
     //key for army
@@ -782,15 +826,15 @@ void Window::motionCallback(int x, int y){
             rot.makeRotate(rot_angle, rotAxis);
             //update the currect model2world
                 if(bunny == true){
-                    Globals::bunny.model2world = Globals::bunny.model2world * rot;
+                    Globals::bunny->model2world = Globals::bunny->model2world * rot;
                     //force a redraw of scene
                     displayBunnyCallback();
                 }else if(dragon == true){
-                    Globals::dragon.model2world = Globals::dragon.model2world * rot;
+                    Globals::dragon->model2world = Globals::dragon->model2world * rot;
                     //force a redraw of scene
                     displayDragonCallback();
                 }else if(bear == true){
-                    Globals::bear.model2world = Globals::bear.model2world * rot;
+                    Globals::bear->model2world = Globals::bear->model2world * rot;
                     //force a redraw of scene
                     displayBearCallback();
                 }
@@ -825,15 +869,15 @@ void Window::motionCallback(int x, int y){
             
             //update the currect model2world
             if(bunny == true){
-               Globals::bunny.model2world = Globals::bunny.model2world * scale;
+               Globals::bunny->model2world = Globals::bunny->model2world * scale;
                 //force a redraw of scene
                 displayBunnyCallback();
             }else if(dragon == true){
-                Globals::dragon.model2world = Globals::dragon.model2world * scale;
+                Globals::dragon->model2world = Globals::dragon->model2world * scale;
                 //force a redraw of scene
                 displayDragonCallback();
             }else if(bear == true){
-                Globals::bear.model2world = Globals::bear.model2world * scale;
+                Globals::bear->model2world = Globals::bear->model2world * scale;
                 //force a redraw of scene
                 displayBearCallback();
             }

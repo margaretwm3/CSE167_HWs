@@ -13,6 +13,7 @@
 #include <iostream>
 #include <fstream>
 #include "Matrix4.h"
+#include "Light.h"
 #include <vector>
 
 class dragon{
@@ -41,6 +42,9 @@ public:
     double z_biggest = 0;
     //calculate the center of the model
     double center_x, center_y,center_z;
+    
+    //light
+    Light light;
 };
 
 

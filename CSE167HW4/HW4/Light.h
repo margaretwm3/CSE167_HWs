@@ -12,25 +12,18 @@
 #include <stdio.h>
 #include "Vector4.h"
 #include "Vector3.h"
+#include <GLUT/GLUT.h>
 
 class Light{
 public:
-    Vector4 *position;
-    Vector3 *color;
-    Vector4 *direction;
-    float openAngle;
-    float fAmbient;
-    
-    //for spot light
-    float spot_width; // small enough so that only illuminates part of the objects
-    float fConstantAtt;
-    float fLinearAtt;
-    float fExpAtt;
-    
     Light();
-    Vector4 getPointLightColor(Light ptLight, Vector4 vWorldPos, Vector3 vNormal);
-    void setLightPosition(float a, float b, float c);
+    //create three seperate light positions
+    GLfloat light_position[4] = { 1.0,3.0,7.0, 1.0 };
+    GLfloat light_ambient[4] = { 0.0, 0.0, 0.0, 1.0 };
+    GLfloat light_diffuse[4] = { 1.0, 1.0, 1.0, 1.0 };
+    GLfloat light_specular[4] = { 1.0, 1.0, 1.0, 1.0 };
     
+    void setLightPosition(float,float,float,float);
 };
 
 #endif /* defined(__HW4__Light__) */

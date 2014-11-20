@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "window.cpp"
-            timestampString = "438158647.464578"
+            timestampString = "438174261.516759"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "739"
-            endingLineNumber = "739"
+            startingLineNumber = "783"
+            endingLineNumber = "783"
             landmarkName = "Window::trackBallMapping( int x, int y )"
             landmarkType = "5">
          </BreakpointContent>
@@ -42,28 +42,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "window.cpp"
-            timestampString = "438158647.464578"
+            timestampString = "438174261.516759"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "781"
-            endingLineNumber = "781"
+            startingLineNumber = "825"
+            endingLineNumber = "825"
             landmarkName = "Window::motionCallback(int x, int y)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Light.cpp"
-            timestampString = "438149997.393075"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "43"
-            endingLineNumber = "43"
-            landmarkName = "Light::getPointLightColor(Light ptLight, Vector4 vWorldPos, Vector3 vNormal)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

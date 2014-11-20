@@ -78,6 +78,8 @@ dragon::dragon(){
     center_x = 0.5*(x_smallest + x_biggest);
     center_y = 0.5*(y_smallest + y_biggest);
     center_z = 0.5*(z_smallest + z_biggest);
+    
+    light = Light();
 }
 
 Matrix4& dragon::getMatrix()

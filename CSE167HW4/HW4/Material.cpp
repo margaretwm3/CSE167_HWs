@@ -13,36 +13,29 @@ using namespace std;
 
 
 Material::Material() {
-    front_and_back = GL_FRONT_AND_BACK;
 }
 
-Material::Material(GLenum fb) {
-    front_and_back = fb;
+void Material::setAmbient(float x,float y,float z,float w){
+    mat_ambient[0] = x;
+    mat_ambient[1] = y;
+    mat_ambient[2] = z;
+    mat_ambient[3] = w;
 }
 
-void Material::setAmbient(GLfloat *v) {
-    //The glMaterialfv function specifies material parameters for the lighting model.
-    glMaterialfv(front_and_back , GL_AMBIENT, v);
+void Material::setDiffuse(float x,float y,float z,float w){
+    mat_diffuse[0] = x;
+    mat_diffuse[1] = y;
+    mat_diffuse[2] = z;
+    mat_diffuse[3] = w;
 }
 
-void Material::setDiffuse(GLfloat *v) {
-    glMaterialfv(front_and_back , GL_DIFFUSE, v);
+void Material::setSpecular(float x,float y,float z,float w){
+    mat_specular[0] = x;
+    mat_specular[1] = y;
+    mat_specular[2] = z;
+    mat_specular[3] = w;
 }
 
-void Material::setAmbientAndDiffuse(GLfloat *v) {
-    glMaterialfv(front_and_back , GL_AMBIENT_AND_DIFFUSE, v);
+void Material::setShininess(float x){
+    mat_shininess[0] = x;
 }
-
-void Material::setSpecular(GLfloat *v) {
-    glMaterialfv(front_and_back , GL_SPECULAR, v);
-}
-
-void Material::setShininess(GLfloat *v) {
-    glMaterialfv(front_and_back , GL_SHININESS, v);
-}
-
-
-void Material::setColorIndexes(GLfloat *v) {
-    glMaterialfv(front_and_back, GL_COLOR_INDEXES, v);
-}
-

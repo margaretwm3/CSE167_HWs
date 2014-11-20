@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include "Matrix4.h"
 #include "Vector3.h"
+#include "Light.h"
 #include <iostream>
 #include <vector>
 
@@ -42,5 +43,6 @@ public:
     double z_biggest = 0;
     //calculate the center of the model
     double center_x, center_y,center_z;
+    Light light;
 };
 #endif /* defined(__HW4__bear__) */

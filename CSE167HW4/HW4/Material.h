@@ -15,18 +15,21 @@
 class Material
 {
 public:
-    int lightNumber;
-    GLenum front_and_back;
+   
+    GLfloat mat_ambient[4] = { 0.7, 0.7, 0.7, 1.0 };
+    GLfloat mat_diffuse[4] = { 0.1, 0.1, 0.1, 1.0 };
+    GLfloat mat_specular[4] = { 1.0, 1.0, 1.0, 1.0 };
+    GLfloat mat_shininess[1] = { 129 };
+    GLfloat mat_ambient_color[4] = { 0.f, .8f, .8f, 1.f};
     
     Material();
-    Material(GLenum);
+
     
-    void setAmbient(GLfloat*);
-    void setDiffuse(GLfloat*);
-    void setAmbientAndDiffuse(GLfloat*);
-    void setSpecular(GLfloat*);
-    void setShininess(GLfloat*);
-    void setColorIndexes(GLfloat *v);
+    void setAmbient(float,float,float,float);
+    void setDiffuse(float,float,float,float);
+    void setSpecular(float,float,float,float);
+    void setShininess(float);
+
 };
 
 #endif /* defined(__HW4__Material__) */
