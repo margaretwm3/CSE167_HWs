@@ -71,6 +71,7 @@ void Window::displayBunnyCallback(){
     cerr << "displayBunnyCallback called " << endl;
     if(shader_on){
         Globals::shader->bind();
+        Globals::shader->printLog("bunny shader ");
     }
     else{
         Globals::shader->unbind();
@@ -208,6 +209,13 @@ void Window::displayBunnyCallback(){
 
 void Window::displayDragonCallback(){
     cerr << "displayDragonCallback called " << endl;
+    if(shader_on){
+        Globals::shader->bind();
+        Globals::shader->printLog("dragon shader ");
+    }
+    else{
+        Globals::shader->unbind();
+    }
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glClearColor(0, 0, 0, 0);
@@ -777,6 +785,20 @@ void Window::processDragonNormalKeys(unsigned char key, int x, int y){
     // move the cube up by a small amount
     else if (key == 'Y'){
         Globals::dragon->moveUp();
+    }
+    else if(key == 'p'){
+        shader_on = !shader_on;
+        if(shader_on){
+            cout << "shader on " << endl;
+            Globals::shader =
+            new Shader("/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/diffuse_shading.vert",
+                       
+                       "/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/diffuse_shading.frag",true);
+        }else{
+            cout << "shader off " << endl;
+            Globals::shader =
+            new Shader("/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/diffuse_shading.vert","/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/diffuse_shading.frag",false);
+        }
     }
     // move the cube zzinto the screen by a small amount
     else if(key == 'z'){
