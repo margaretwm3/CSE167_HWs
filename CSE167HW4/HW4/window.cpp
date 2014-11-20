@@ -46,6 +46,7 @@ vector<Vector3>color;
 int movement; //switch between different states
 Vector3 lastPoint = Vector3(0,0,0); // class variable last point
 Vector3 lastPoint_z = Vector3(0,0,0);
+float spot_light_angle = 60;
 
 //----------------------------------------------------------------------------
 // Callback method called when system is idle.
@@ -69,15 +70,16 @@ void Window::idleBearCallback(){
 void Window::displayBunnyCallback(){
     cerr << "displayBunnyCallback called " << endl;
     if(shader_on){
-        Globals::shader.bind();
+        Globals::shader->bind();
     }
     else{
-        Globals::shader.unbind();
+        Globals::shader->unbind();
     }
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glClearColor(0, 0, 0, 0);
     glEnable(GL_DEPTH_TEST);
+    glDisable(GL_LIGHT0);
     
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -116,8 +118,8 @@ void Window::displayBunnyCallback(){
     glLightfv(GL_LIGHT0, GL_POSITION, Globals::bunny->light.light_position);
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
-    
-    
+
+
     GLfloat light1_ambient[] = { 0.2, 0.2, 0.2, 1.0 };
     GLfloat light1_diffuse[] = { 1.0,1.0, 1.0,1.0 };
     GLfloat light1_specular[] = { 1.0, 1.0, 1.0, 1.0 };
@@ -137,7 +139,7 @@ void Window::displayBunnyCallback(){
     glLightfv(GL_LIGHT1, GL_POSITION, Globals::bunny->light.light_position_s);
     glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 0.5);
     
-    glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 60.0);
+    glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, spot_light_angle);
     glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spot_dir);
     glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 100);
     glEnable(GL_LIGHT1);
@@ -269,7 +271,7 @@ void Window::displayDragonCallback(){
     glLightfv(GL_LIGHT1, GL_POSITION, Globals::dragon->light.light_position_s);
     glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 0.5);
     
-    glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 60.0);
+    glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, spot_light_angle);
     glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spot_dir);
     glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 100);
     glEnable(GL_LIGHT1);
@@ -397,7 +399,7 @@ void Window::displayBearCallback(){
     glLightfv(GL_LIGHT1, GL_POSITION, Globals::bear->light.light_position_s);
     glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 0.5);
     
-    glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 60.0);
+    glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, spot_light_angle);
     glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spot_dir);
     glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 100);
     glEnable(GL_LIGHT1);
@@ -686,14 +688,30 @@ void Window::processBunnyNormalKeys(unsigned char key, int x, int y){
     }
     else if(key == 'p'){
         shader_on = !shader_on;
-        /*
         if(shader_on){
-            Shader shader =
-                Shader("diffuse_shading.vert","diffuse_shading.frag",true);
+            cout << "shader on " << endl;
+            Globals::shader =
+                new Shader("/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/diffuse_shading.vert",
+                       
+                       "/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/diffuse_shading.frag",true);
         }else{
-            Shader shader =
-               Shader("diffuse_shading.vert","diffuse_shading.frag",false);
-       }*/
+            cout << "shader off " << endl;
+            Globals::shader =
+               new Shader("/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/diffuse_shading.vert","/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/diffuse_shading.frag",false);
+       }
+    }
+    //light control mode
+    else if(key == 'l'){
+        cout << "light control model " << endl;
+        glutMouseFunc(onMouseClick_light);
+        glutMotionFunc(motionCallback_light);// register motion callback
+    }
+    //back to normal mode
+    else if(key == 'm'){
+        cout << "back to normal mode " << endl;
+        glutMouseFunc(onMouseClick);
+        glutMotionFunc(motionCallback);// register motion callback
+    
     }
     else if(key == '1'){
         --Globals::bunny->light.light_position[2];
@@ -919,6 +937,20 @@ void Window::processNormalKeys(unsigned char key, int x, int y){
       }
 }
 
+// Treat the mouse position as the projection of a point on the hemi-sphere down to the image plane (along the z-axis), and determine that point on the hemi-sphere.
+Vector3 Window::trackBallMapping( int x, int y ){
+    Vector3 v = Vector3(1,1,1);
+    float d;
+    v.x = (2.0 * x - Window::width) / Window::width;
+    v.y = (Window::height - 2.0 * y) / Window::height;
+    v.z = 0.0; // pt lie on a 2D circle
+    d = v.length();
+    d = (d<1.0) ? d : 1.0;//default the radius of the circle is 1.0
+    v.z = sqrtf(1.001 - d*d);
+    v.normalize(); // Still need to normalize, since we only capped d, not v.
+    return v;
+}
+
 //for mouse control
 void Window::onMouseClick(int button, int state, int x, int y) {
     //rotate the object around
@@ -948,18 +980,45 @@ void Window::onMouseClick(int button, int state, int x, int y) {
     }
 }
 
-// Treat the mouse position as the projection of a point on the hemi-sphere down to the image plane (along the z-axis), and determine that point on the hemi-sphere.
-Vector3 Window::trackBallMapping( int x, int y ){
-    Vector3 v = Vector3(1,1,1);
-    float d;
-    v.x = (2.0 * x - Window::width) / Window::width;
-    v.y = (Window::height - 2.0 * y) / Window::height;
-    v.z = 0.0; // pt lie on a 2D circle
-    d = v.length();
-    d = (d<1.0) ? d : 1.0;//default the radius of the circle is 1.0
-    v.z = sqrtf(1.001 - d*d);
-    v.normalize(); // Still need to normalize, since we only capped d, not v.
-    return v;
+void Window::onMouseClick_light(int button, int state, int x, int y){
+    switch (button) {
+        case GLUT_LEFT_BUTTON:
+            movement = 1;
+            break;
+        case GLUT_RIGHT_BUTTON:
+            movement = 2;
+            lastPoint = trackBallMapping(x,y);
+            lastPoint_z = Vector3(x, y, 0);
+            glMatrixMode( GL_MODELVIEW );
+            break;
+        default:
+            break;
+    }
+}
+
+
+void Window::motionCallback_light(int x, int y){
+    float pixel_diff;
+    float spot_light_angle;
+    Vector3 curPoint = Vector3(1,1,1);
+    switch (movement)
+    {
+        case 1:
+            break;
+        case 2:
+            pixel_diff = y - lastPoint_z.y;//signed distance about y coordinate
+            cout << "pixel_diff is " << pixel_diff;
+            spot_light_angle = pixel_diff + spot_light_angle;
+            if(spot_light_angle < 0){
+                spot_light_angle = 0;
+            }
+            else if(spot_light_angle > 90){
+                spot_light_angle = 90;
+            }
+            cout << "spot light angle is " << spot_light_angle << endl;
+            lastPoint = curPoint;
+            break;
+    }
 }
 
 void Window::motionCallback(int x, int y){

@@ -34,6 +34,9 @@ class Window	  // OpenGL output window related routines
         static void idleBearCallback(void);    //idlecallback for bunny
         static void processBearNormalKeys(unsigned char key, int x, int y);
     
+        //extra credit
+        static void onMouseClick_light(int button, int state, int x, int y);
+        static void motionCallback_light(int x, int y);
 };
 
 #endif

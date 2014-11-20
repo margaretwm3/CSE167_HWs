@@ -20,7 +20,7 @@ namespace Globals
     extern bunny *bunny;
     extern dragon *dragon;
     extern bear *bear;
-    extern Shader shader;
+    extern Shader *shader;
 };
 
 #endif
