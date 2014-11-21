@@ -15,30 +15,32 @@ void main()
     n = normalize(normal);
     
     // Compute the ligt direction
-    vec3 lightDir = vec3(gl_LightSource[0].position-ecPos);
+    for(int i = 0; i < 2;i++){
+        vec3 lightDir = vec3(gl_LightSource[i].position-ecPos);
     
-    /* compute the distance to the light source to a varying variable*/
-    float dist = length(lightDir);
+        /* compute the distance to the light source to a varying variable*/
+        float dist = length(lightDir);
     
-    /* compute the dot product between normal and ldir */
-    NdotL = max(dot(n,normalize(lightDir)),0.0);
+        /* compute the dot product between normal and ldir */
+        NdotL = max(dot(n,normalize(lightDir)),0.0);
     
-    if (NdotL > 0.0) {
+        if (NdotL > 0.0) {
         
-        spotEffect = dot(normalize(gl_LightSource[0].spotDirection), normalize(-lightDir));
-        if (spotEffect > gl_LightSource[0].spotCosCutoff) {
-            spotEffect = pow(spotEffect, gl_LightSource[0].spotExponent);
-            att = spotEffect / (gl_LightSource[0].constantAttenuation +
-                                gl_LightSource[0].linearAttenuation * dist +
-                                gl_LightSource[0].quadraticAttenuation * dist * dist);
+        spotEffect = dot(normalize(gl_LightSource[i].spotDirection), normalize(-lightDir));
+        if (spotEffect > gl_LightSource[i].spotCosCutoff) {
+            spotEffect = pow(spotEffect, gl_LightSource[i].spotExponent);
+            att = spotEffect / (gl_LightSource[i].constantAttenuation +
+                                gl_LightSource[i].linearAttenuation * dist +
+                                gl_LightSource[i].quadraticAttenuation * dist * dist);
             
             color += att * (diffuse * NdotL + ambient);
             
             
             halfV = normalize(halfVector);
             NdotHV = max(dot(n,halfV),0.0);
-            color += att * gl_FrontMaterial.specular * gl_LightSource[0].specular * pow(NdotHV,gl_FrontMaterial.shininess);
+            color += att * gl_FrontMaterial.specular * gl_LightSource[i].specular * pow(NdotHV,gl_FrontMaterial.shininess);
         }
+    }
     }
     
     gl_FragColor = color;
