@@ -81,6 +81,7 @@ void Window::displayBunnyCallback(){
     glClearColor(0, 0, 0, 0);
     glEnable(GL_DEPTH_TEST);
     glDisable(GL_LIGHT0);
+    //glDisable(GL_COLOR_MATERIAL);
     
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -209,6 +210,7 @@ void Window::displayBunnyCallback(){
 
 void Window::displayDragonCallback(){
     cerr << "displayDragonCallback called " << endl;
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     if(shader_on){
         Globals::shader->bind();
         Globals::shader->printLog("dragon shader ");
@@ -216,11 +218,11 @@ void Window::displayDragonCallback(){
     else{
         Globals::shader->unbind();
     }
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
     glMatrixMode(GL_MODELVIEW);
     glClearColor(0, 0, 0, 0);
     glEnable(GL_DEPTH_TEST);
-    glDisable(GL_COLOR_MATERIAL);
+    //glDisable(GL_COLOR_MATERIAL);
     
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -344,11 +346,18 @@ void Window::displayDragonCallback(){
 
 void Window::displayBearCallback(){
     cerr << "displayBearCallback called " << endl;
+    if(shader_on){
+        Globals::shader->bind();
+        Globals::shader->printLog("dragon shader ");
+    }
+    else{
+        Globals::shader->unbind();
+    }
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glClearColor(0, 0, 0, 0);
     glEnable(GL_DEPTH_TEST);
-    glDisable(GL_COLOR_MATERIAL);
+    //glDisable(GL_COLOR_MATERIAL);
     
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -699,13 +708,13 @@ void Window::processBunnyNormalKeys(unsigned char key, int x, int y){
         if(shader_on){
             cout << "shader on " << endl;
             Globals::shader =
-                new Shader("/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/diffuse_shading.vert",
+                new Shader("/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/color.vert",
                        
-                       "/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/diffuse_shading.frag",true);
+                       "/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/color.frag",true);
         }else{
             cout << "shader off " << endl;
             Globals::shader =
-               new Shader("/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/diffuse_shading.vert","/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/diffuse_shading.frag",false);
+               new Shader("/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/color.vert","/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/color.frag",false);
        }
     }
     //light control mode
@@ -791,13 +800,13 @@ void Window::processDragonNormalKeys(unsigned char key, int x, int y){
         if(shader_on){
             cout << "shader on " << endl;
             Globals::shader =
-            new Shader("/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/diffuse_shading.vert",
+            new Shader("/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/color.vert",
                        
-                       "/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/diffuse_shading.frag",true);
+                       "/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/color.frag",true);
         }else{
             cout << "shader off " << endl;
             Globals::shader =
-            new Shader("/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/diffuse_shading.vert","/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/diffuse_shading.frag",false);
+            new Shader("/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/color.vert","/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/color.frag",false);
         }
     }
     // move the cube zzinto the screen by a small amount
@@ -892,6 +901,20 @@ void Window::processBearNormalKeys(unsigned char key, int x, int y){
     }
     else if(key== 'r'){
         Globals::bear->spin(1.0);
+    }
+    else if(key == 'p'){
+        shader_on = !shader_on;
+        if(shader_on){
+            cout << "shader on " << endl;
+            Globals::shader =
+            new Shader("/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/color.vert",
+                       
+                       "/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/color.frag",true);
+        }else{
+            cout << "shader off " << endl;
+            Globals::shader =
+            new Shader("/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/color.vert","/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/color.frag",false);
+        }
     }
     else if(key == '1'){
         --Globals::bear->light.light_position[2];

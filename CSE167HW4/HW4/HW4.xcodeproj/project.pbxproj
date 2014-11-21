@@ -47,10 +47,10 @@
 /* Begin PBXFileReference section */
 		F056BE6C1A1E1D6F0081944E /* shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shader.cpp; sourceTree = "<group>"; };
 		F056BE6D1A1E1D6F0081944E /* shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shader.h; sourceTree = "<group>"; };
-		F0779FA51A1E201500D70538 /* diffuse_shading.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = diffuse_shading.frag; sourceTree = "<group>"; };
-		F0779FA61A1E202500D70538 /* diffuse_shading.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = diffuse_shading.vert; sourceTree = "<group>"; };
 		F0779FA91A1E297200D70538 /* GLee.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = GLee.c; sourceTree = "<group>"; };
 		F0779FAA1A1E297200D70538 /* GLee.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLee.h; sourceTree = "<group>"; };
+		F0779FAC1A1E89AC00D70538 /* color.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = color.frag; sourceTree = "<group>"; };
+		F0779FAD1A1E89AC00D70538 /* color.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = color.vert; sourceTree = "<group>"; };
 		F0BFFA8C1A1B7E9A009960C8 /* Material.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Material.cpp; sourceTree = "<group>"; };
 		F0BFFA8D1A1B7E9A009960C8 /* Material.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Material.h; sourceTree = "<group>"; };
 		F0BFFA8F1A1C4C65009960C8 /* Light.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Light.cpp; sourceTree = "<group>"; };
@@ -108,8 +108,8 @@
 		F0C7B9091A15B5070088C876 = {
 			isa = PBXGroup;
 			children = (
-				F0779FA61A1E202500D70538 /* diffuse_shading.vert */,
-				F0779FA51A1E201500D70538 /* diffuse_shading.frag */,
+				F0779FAC1A1E89AC00D70538 /* color.frag */,
+				F0779FAD1A1E89AC00D70538 /* color.vert */,
 				F056BE6C1A1E1D6F0081944E /* shader.cpp */,
 				F056BE6D1A1E1D6F0081944E /* shader.h */,
 				F0BFFA8F1A1C4C65009960C8 /* Light.cpp */,
