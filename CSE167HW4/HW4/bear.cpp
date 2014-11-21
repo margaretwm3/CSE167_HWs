@@ -82,6 +82,7 @@ bear::bear(){
     center_y = 0.5*(y_smallest + y_biggest);
     center_z = 0.5*(z_smallest + z_biggest);
     light = Light();
+    //light.setLightPosition(-3, 4, -10, 1.0);
     Matrix4 t = Matrix4();
     t.identity();
     t.makeTranslate(light.light_position[0],

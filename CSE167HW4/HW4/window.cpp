@@ -81,7 +81,7 @@ void Window::displayBunnyCallback(){
     glClearColor(0, 0, 0, 0);
     glEnable(GL_DEPTH_TEST);
     glDisable(GL_LIGHT0);
-    //glDisable(GL_COLOR_MATERIAL);
+    glDisable(GL_COLOR_MATERIAL);
     
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -111,6 +111,11 @@ void Window::displayBunnyCallback(){
     glLoadIdentity();
     glShadeModel (GL_SMOOTH);
     
+    cout << "In display bunny callback " << endl;
+    cout << "bunny mat diffuse " << Globals::bunny->mat.mat_diffuse[0] << endl;
+    cout << "bunny mat diffuse " << Globals::bunny->mat.mat_diffuse[1] << endl;
+    cout << "bunny mat diffuse " << Globals::bunny->mat.mat_diffuse[2] << endl;
+    cout << "bunny mat diffuse " << Globals::bunny->mat.mat_diffuse[3] << endl;
     glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, Globals::bunny->mat.mat_specular);
     glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, Globals::bunny->mat.mat_shininess);
     glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, Globals::bunny->mat.mat_diffuse);
@@ -252,6 +257,7 @@ void Window::displayDragonCallback(){
     glLoadIdentity();
     glShadeModel (GL_SMOOTH);
     
+   
     glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, Globals::dragon->mat.mat_specular);
     glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, Globals::dragon->mat.mat_shininess);
     glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, Globals::dragon->mat.mat_diffuse);
@@ -357,7 +363,7 @@ void Window::displayBearCallback(){
     glMatrixMode(GL_MODELVIEW);
     glClearColor(0, 0, 0, 0);
     glEnable(GL_DEPTH_TEST);
-    //glDisable(GL_COLOR_MATERIAL);
+    glDisable(GL_COLOR_MATERIAL);
     
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -765,6 +771,24 @@ void Window::processBunnyNormalKeys(unsigned char key, int x, int y){
         ++Globals::bunny->light.light_position_s[2];
         Globals::bunny->update();
         cout << "light pos z : " << Globals::bunny->light.light_position_s[2] << endl;
+    }else if(key == 'd'){
+        cout << "enter less diffuse " << endl;
+        Globals::bunny->mat.setDiffuse(0.1, 0.1, 0.1, 1);
+        cout << "bunny mat diffuse " << Globals::bunny->mat.mat_diffuse[0] << endl;
+        cout << "bunny mat diffuse " << Globals::bunny->mat.mat_diffuse[1] << endl;
+        cout << "bunny mat diffuse " << Globals::bunny->mat.mat_diffuse[2] << endl;
+        cout << "bunny mat diffuse " << Globals::bunny->mat.mat_diffuse[3] << endl;
+        displayBunnyCallback();
+        
+    //more diffuse
+    }else if(key == 'D'){
+         cout << "enter more diffuse " << endl;
+        Globals::bunny->mat.setDiffuse(0.5, 0.5, 0.5, 1);
+        cout << "bunny mat diffuse " << Globals::bunny->mat.mat_diffuse[0] << endl;
+        cout << "bunny mat diffuse " << Globals::bunny->mat.mat_diffuse[1] << endl;
+        cout << "bunny mat diffuse " << Globals::bunny->mat.mat_diffuse[2] << endl;
+        cout << "bunny mat diffuse " << Globals::bunny->mat.mat_diffuse[3] << endl;
+        displayBunnyCallback();
     }
 }
 
@@ -862,6 +886,25 @@ void Window::processDragonNormalKeys(unsigned char key, int x, int y){
         Globals::dragon->update();
         cout << "light pos z : " <<
           Globals::dragon->light.light_position_s[2] << endl;
+    }
+    else if(key == 'd'){
+        cout << "enter less diffuse " << endl;
+        Globals::dragon->mat.setDiffuse(0.1, 0.1, 0.1, 1);
+        cout << "bunny mat diffuse " << Globals::dragon->mat.mat_diffuse[0] << endl;
+        cout << "bunny mat diffuse " << Globals::dragon->mat.mat_diffuse[1] << endl;
+        cout << "bunny mat diffuse " << Globals::dragon->mat.mat_diffuse[2] << endl;
+        cout << "bunny mat diffuse " << Globals::dragon->mat.mat_diffuse[3] << endl;
+        displayDragonCallback();
+        
+        //more diffuse
+    }else if(key == 'D'){
+        cout << "enter more diffuse " << endl;
+        Globals::dragon->mat.setDiffuse(0.5, 0.5, 0.5, 1);
+        cout << "bunny mat diffuse " << Globals::dragon->mat.mat_diffuse[0] << endl;
+        cout << "bunny mat diffuse " << Globals::dragon->mat.mat_diffuse[1] << endl;
+        cout << "bunny mat diffuse " << Globals::dragon->mat.mat_diffuse[2] << endl;
+        cout << "bunny mat diffuse " << Globals::dragon->mat.mat_diffuse[3] << endl;
+        displayDragonCallback();
     }
 }
 void Window::processBearNormalKeys(unsigned char key, int x, int y){
