@@ -25,6 +25,7 @@ namespace Globals
   class dragon *dragon;
   class bear *bear;
   Shader* shader;
+  double spot_light_angle = 60;
 };
 
 

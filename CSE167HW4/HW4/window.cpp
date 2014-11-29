@@ -46,7 +46,6 @@ vector<Vector3>color;
 int movement; //switch between different states
 Vector3 lastPoint = Vector3(0,0,0); // class variable last point
 Vector3 lastPoint_z = Vector3(0,0,0);
-float spot_light_angle = 60;
 
 //----------------------------------------------------------------------------
 // Callback method called when system is idle.
@@ -99,11 +98,18 @@ void Window::displayBunnyCallback(){
     
     //for spot light
     glPushMatrix();
+        Matrix4 rot = Matrix4();
+        rot.identity();
+        rot.makeRotateX(-90);
         Matrix4 bunny_spotlight_m2w = Globals::bunny->m2w_spotLight;
+        bunny_spotlight_m2w = bunny_spotlight_m2w * rot;
+        rot.identity();
+        rot.makeRotateY(50);
+        bunny_spotlight_m2w = bunny_spotlight_m2w * rot;
         bunny_spotlight_m2w .transpose();
         glLoadMatrixd(bunny_spotlight_m2w.getPointer());
         glColor3f(1, 0, 0);
-        glutSolidSphere(0.5,20,20);// for point light
+        glutSolidCone(1, 2, 3, 4);// for point light
     glPopMatrix();
     
     //lighting model
@@ -116,6 +122,8 @@ void Window::displayBunnyCallback(){
     cout << "bunny mat diffuse " << Globals::bunny->mat.mat_diffuse[1] << endl;
     cout << "bunny mat diffuse " << Globals::bunny->mat.mat_diffuse[2] << endl;
     cout << "bunny mat diffuse " << Globals::bunny->mat.mat_diffuse[3] << endl;
+    cout << "shininiess is in displaybunnycallback " << Globals::bunny->mat.mat_shininess[0] << endl;
+
     glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, Globals::bunny->mat.mat_specular);
     glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, Globals::bunny->mat.mat_shininess);
     glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, Globals::bunny->mat.mat_diffuse);
@@ -146,7 +154,8 @@ void Window::displayBunnyCallback(){
     glLightfv(GL_LIGHT1, GL_POSITION, Globals::bunny->light.light_position_s);
     glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 0.5);
     
-    glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, spot_light_angle);
+    cout << "spot_light angle is in displayBunny " << Globals::spot_light_angle << endl;
+    glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, Globals::spot_light_angle);
     glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spot_dir);
     glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 100);
     glEnable(GL_LIGHT1);
@@ -237,19 +246,27 @@ void Window::displayDragonCallback(){
     
     //for point light
     glPushMatrix();
-    Matrix4 dragon_light_m2w = Globals::dragon->m2w_light;
-    dragon_light_m2w .transpose();
-    glLoadMatrixd(dragon_light_m2w.getPointer());
-    glutSolidSphere(0.5,20,20);// for point light
+        Matrix4 dragon_light_m2w = Globals::dragon->m2w_light;
+        dragon_light_m2w .transpose();
+        glLoadMatrixd(dragon_light_m2w.getPointer());
+        glColor3f(1, 1, 1);
+        glutSolidSphere(0.5,20,20);// for point light
     glPopMatrix();
     
     //for spot light
     glPushMatrix();
-    Matrix4 dragon_spotlight_m2w = Globals::dragon->m2w_spotLight;
-    dragon_spotlight_m2w .transpose();
-    glLoadMatrixd(dragon_spotlight_m2w.getPointer());
-    glColor3f(1, 0, 0);
-    glutSolidSphere(0.5,20,20);// for point light
+        Matrix4 rot = Matrix4();
+        rot.identity();
+        rot.makeRotateX(-90);
+        Matrix4 dragon_spotlight_m2w = Globals::dragon->m2w_spotLight;
+        dragon_spotlight_m2w = dragon_spotlight_m2w * rot;
+        rot.identity();
+        rot.makeRotateY(50);
+        dragon_spotlight_m2w = dragon_spotlight_m2w * rot;
+        dragon_spotlight_m2w .transpose();
+        glLoadMatrixd(dragon_spotlight_m2w.getPointer());
+        glColor3f(1, 0, 0);
+        glutSolidCone(1, 2, 3, 4);// for point light
     glPopMatrix();
     
     //lighting model
@@ -287,7 +304,8 @@ void Window::displayDragonCallback(){
     glLightfv(GL_LIGHT1, GL_POSITION, Globals::dragon->light.light_position_s);
     glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 0.5);
     
-    glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, spot_light_angle);
+    cout << "spot light angle is " << Globals::spot_light_angle << endl;
+    glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, Globals::spot_light_angle);
     glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spot_dir);
     glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 100);
     glEnable(GL_LIGHT1);
@@ -376,16 +394,24 @@ void Window::displayBearCallback(){
         Matrix4 bear_light_m2w = Globals::bear->m2w_light;
         bear_light_m2w .transpose();
         glLoadMatrixd(bear_light_m2w.getPointer());
+        glColor3f(1, 1, 1);
         glutSolidSphere(0.5,20,20);// for point light
     glPopMatrix();
     
     //for spot light
     glPushMatrix();
-    Matrix4 bear_spotlight_m2w = Globals::bear->m2w_spotLight;
-    bear_spotlight_m2w .transpose();
-    glLoadMatrixd(bear_spotlight_m2w.getPointer());
-    glColor3f(1, 0, 0);
-    glutSolidSphere(0.5,20,20);// for point light
+        Matrix4 rot = Matrix4();
+        rot.identity();
+        rot.makeRotateX(-90);
+        Matrix4 bear_spotlight_m2w = Globals::bear->m2w_spotLight;
+        bear_spotlight_m2w = bear_spotlight_m2w * rot;
+        rot.identity();
+        rot.makeRotateY(50);
+        bear_spotlight_m2w = bear_spotlight_m2w * rot;
+        bear_spotlight_m2w .transpose();
+        glLoadMatrixd(bear_spotlight_m2w.getPointer());
+        glColor3f(1, 0, 0);
+        glutSolidCone(1, 2, 3, 4);// for point light
     glPopMatrix();
     
     //lighting model
@@ -422,7 +448,7 @@ void Window::displayBearCallback(){
     glLightfv(GL_LIGHT1, GL_POSITION, Globals::bear->light.light_position_s);
     glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 0.5);
     
-    glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, spot_light_angle);
+    glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, Globals::spot_light_angle);
     glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spot_dir);
     glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 100);
     glEnable(GL_LIGHT1);
@@ -463,7 +489,6 @@ void Window::displayBearCallback(){
 
     glmatrix.transpose();
     glLoadMatrixd(glmatrix.getPointer());
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // clear color and depth buffers
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_POINT_SMOOTH);
@@ -495,6 +520,7 @@ void Window::displayBearCallback(){
 //----------------------------------------------------------------------------
 // Callback method called by GLUT when window readraw is necessary or when glutPostRedisplay() was called.
 void Window::displayCallback(){
+    clock_t startTime = clock();
     cerr << "Window::displayCallback called" << endl;
     glColor3f(0.5,0.0,1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // clear color and depth buffers
@@ -535,8 +561,8 @@ void Window::displayCallback(){
         Globals::robot.root->drawBoundingBox(glmatrix);
     //display army
     }else{
-        for(int i = 0; i < 5; i++){
-            for(int j = 0; j < 5; j++){
+        for(int i = 0; i < 3; i++){
+            for(int j = 0; j < 3; j++){
                 Robot r = Robot();
                 r.buildRobot(forwardAngle, backwardAngle);
                 r.setLocation(15*i, 2,-10 * j);
@@ -549,6 +575,8 @@ void Window::displayCallback(){
         glEnd();
         glFlush();
         glutSwapBuffers();
+        clock_t endTime = clock();
+    cout << "frame rate " << 1.0/(float((endTime-startTime))/CLOCKS_PER_SEC) << endl;
 }
 
 //----------------------------------------------------------------------------
@@ -678,22 +706,18 @@ void Window::processBunnyNormalKeys(unsigned char key, int x, int y){
     // move cube left by a small amount
     else if(key == 'x'){
         Globals::bunny->moveLeft();
-        //displayBunnyCallback();
     }
     // move the cube right by a small amount
     else if (key == 'X'){
         Globals::bunny->moveRight();
-        //displayBunnyCallback();
     }
     // move the cube down by a small amount
     else if (key == 'y'){
        Globals::bunny->moveDown();
-       //displayBunnyCallback();
     }
     // move the cube up by a small amount
     else if (key == 'Y'){
         Globals::bunny->moveUp();
-        //displayBunnyCallback();
     }
     // move the cube zzinto the screen by a small amount
     else if(key == 'z'){
@@ -714,13 +738,13 @@ void Window::processBunnyNormalKeys(unsigned char key, int x, int y){
         if(shader_on){
             cout << "shader on " << endl;
             Globals::shader =
-                new Shader("/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/color.vert",
+                new Shader("/Users/margaretwm3/Desktop/CSE167_HWs-master/CSE167HW4/HW4/color.vert",
                        
-                       "/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/color.frag",true);
+                       "/Users/margaretwm3/Desktop/CSE167_HWs-master/CSE167HW4/HW4/color.frag",true);
         }else{
             cout << "shader off " << endl;
             Globals::shader =
-               new Shader("/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/color.vert","/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/color.frag",false);
+               new Shader("/Users/margaretwm3/Desktop/CSE167_HWs-master/CSE167HW4/HW4/color.vert","/Users/margaretwm3/Desktop/CSE167_HWs-master/CSE167HW4/HW4/color.frag",false);
        }
     }
     //light control mode
@@ -773,7 +797,8 @@ void Window::processBunnyNormalKeys(unsigned char key, int x, int y){
         cout << "light pos z : " << Globals::bunny->light.light_position_s[2] << endl;
     }else if(key == 'd'){
         cout << "enter less diffuse " << endl;
-        Globals::bunny->mat.setDiffuse(0.1, 0.1, 0.1, 1);
+        Globals::bunny->mat.setDiffuse(1, 1, 1, 1);
+        //Globals::bunny->mat.setSpecular(1, 1, 1, 1);
         cout << "bunny mat diffuse " << Globals::bunny->mat.mat_diffuse[0] << endl;
         cout << "bunny mat diffuse " << Globals::bunny->mat.mat_diffuse[1] << endl;
         cout << "bunny mat diffuse " << Globals::bunny->mat.mat_diffuse[2] << endl;
@@ -783,11 +808,23 @@ void Window::processBunnyNormalKeys(unsigned char key, int x, int y){
     //more diffuse
     }else if(key == 'D'){
          cout << "enter more diffuse " << endl;
-        Globals::bunny->mat.setDiffuse(0.5, 0.5, 0.5, 1);
+        Globals::bunny->mat.setDiffuse(2, 2, 2, 1);
+        //Globals::bunny->mat.setSpecular(0, 0, 0, 1);
         cout << "bunny mat diffuse " << Globals::bunny->mat.mat_diffuse[0] << endl;
         cout << "bunny mat diffuse " << Globals::bunny->mat.mat_diffuse[1] << endl;
         cout << "bunny mat diffuse " << Globals::bunny->mat.mat_diffuse[2] << endl;
         cout << "bunny mat diffuse " << Globals::bunny->mat.mat_diffuse[3] << endl;
+        displayBunnyCallback();
+    }
+    else if(key == 'n'){
+        cout << "less shiny " << endl;
+        Globals::bunny->mat.setShininess(0);
+        cout << "shininiess is in processNormalkey " <<Globals::bunny->mat.mat_shininess[0] << endl;
+        displayBunnyCallback();
+    }else if(key == 'N'){
+        cout << "more shiny " << endl;
+        Globals::bunny-> mat.setShininess(129);
+        cout << "shininiess is in processNormalkey " << Globals::bunny->mat.mat_shininess[0] << endl;
         displayBunnyCallback();
     }
 }
@@ -824,14 +861,28 @@ void Window::processDragonNormalKeys(unsigned char key, int x, int y){
         if(shader_on){
             cout << "shader on " << endl;
             Globals::shader =
-            new Shader("/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/color.vert",
+            new Shader("/Users/margaretwm3/Desktop/CSE167_HWs-master/CSE167HW4/HW4/color.vert",
                        
-                       "/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/color.frag",true);
+                       "/Users/margaretwm3/Desktop/CSE167_HWs-master/CSE167HW4/HW4/color.frag",true);
         }else{
             cout << "shader off " << endl;
             Globals::shader =
-            new Shader("/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/color.vert","/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/color.frag",false);
+            new Shader("/Users/margaretwm3/Desktop/CSE167_HWs-master/CSE167HW4/HW4/color.vert",
+                       "/Users/margaretwm3/Desktop/CSE167_HWs-master/CSE167HW4/HW4/color.frag",false);
         }
+    }
+    //light control mode
+    else if(key == 'l'){
+        cout << "light control model dragon " << endl;
+        glutMouseFunc(onMouseClick_light);
+        glutMotionFunc(motionCallback_light);// register motion callback
+    }
+    //back to normal mode
+    else if(key == 'm'){
+        cout << "back to normal mode dragon " << endl;
+        glutMouseFunc(onMouseClick);
+        glutMotionFunc(motionCallback);// register motion callback
+        
     }
     // move the cube zzinto the screen by a small amount
     else if(key == 'z'){
@@ -950,14 +1001,26 @@ void Window::processBearNormalKeys(unsigned char key, int x, int y){
         if(shader_on){
             cout << "shader on " << endl;
             Globals::shader =
-            new Shader("/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/color.vert",
-                       
-                       "/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/color.frag",true);
+            new Shader("/Users/margaretwm3/Desktop/CSE167_HWs-master/CSE167HW4/HW4/color.vert",
+                       "/Users/margaretwm3/Desktop/CSE167_HWs-master/CSE167HW4/HW4/color.frag",true);
         }else{
             cout << "shader off " << endl;
             Globals::shader =
-            new Shader("/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/color.vert","/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/color.frag",false);
+            new Shader("/Users/margaretwm3/Desktop/CSE167_HWs-master/CSE167HW4/HW4/color.vert",
+                       "/Users/margaretwm3/Desktop/CSE167_HWs-master/CSE167HW4/HW4/color.frag",false);
         }
+    }
+    //light control mode
+    else if(key == 'l'){
+        cout << "light control model bear " << endl;
+        glutMouseFunc(onMouseClick_light);
+        glutMotionFunc(motionCallback_light);// register motion callback
+    }
+    //back to normal mode
+    else if(key == 'm'){
+        cout << "back to normal mode bear " << endl;
+        glutMouseFunc(onMouseClick);
+        glutMotionFunc(motionCallback);// register motion callback
     }
     else if(key == '1'){
         --Globals::bear->light.light_position[2];
@@ -1072,9 +1135,11 @@ void Window::onMouseClick_light(int button, int state, int x, int y){
     switch (button) {
         case GLUT_LEFT_BUTTON:
             movement = 1;
+            cout << "movement in light control is " << movement << endl;
             break;
         case GLUT_RIGHT_BUTTON:
             movement = 2;
+            cout << "movement in light control is " << movement << endl;
             lastPoint = trackBallMapping(x,y);
             lastPoint_z = Vector3(x, y, 0);
             glMatrixMode( GL_MODELVIEW );
@@ -1084,8 +1149,8 @@ void Window::onMouseClick_light(int button, int state, int x, int y){
     }
 }
 
-
 void Window::motionCallback_light(int x, int y){
+    cout << "enter motionCallback_light " << endl;
     float pixel_diff;
     float spot_light_angle;
     Vector3 curPoint = Vector3(1,1,1);
@@ -1094,17 +1159,28 @@ void Window::motionCallback_light(int x, int y){
         case 1:
             break;
         case 2:
+            cout << "movement 2 light control motionCallback_light " << endl;
+            cout << "lastPoint_z.y is " << lastPoint_z.y << endl;
             pixel_diff = y - lastPoint_z.y;//signed distance about y coordinate
-            cout << "pixel_diff is " << pixel_diff;
-            spot_light_angle = pixel_diff + spot_light_angle;
+            cout << "pixel_diff is in light control is " << pixel_diff << endl;
+            spot_light_angle = pixel_diff + Globals::spot_light_angle;
             if(spot_light_angle < 0){
-                spot_light_angle = 0;
+                Globals::spot_light_angle = 0;
             }
             else if(spot_light_angle > 90){
-                spot_light_angle = 90;
+                Globals::spot_light_angle = 90;
+            }else{
+                Globals::spot_light_angle = spot_light_angle;
             }
-            cout << "spot light angle is " << spot_light_angle << endl;
+            cout << "spot light angle in motionCallback is " << Globals::spot_light_angle << endl;
             lastPoint = curPoint;
+            if(bunny){
+                displayBunnyCallback();
+            }else if(dragon){
+                displayDragonCallback();
+            }else if(bear){
+                displayBearCallback();
+            }
             break;
     }
 }
@@ -1143,15 +1219,16 @@ void Window::motionCallback(int x, int y){
             rot.makeRotate(rot_angle, rotAxis);
             //update the currect model2world
                 if(bunny == true){
-                    Globals::bunny->model2world = Globals::bunny->model2world * rot;
+                    //needs to right multiple bunny model2world
+                    Globals::bunny->model2world =  rot * Globals::bunny->model2world;
                     //force a redraw of scene
                     displayBunnyCallback();
                 }else if(dragon == true){
-                    Globals::dragon->model2world = Globals::dragon->model2world * rot;
+                    Globals::dragon->model2world = rot * Globals::dragon->model2world;
                     //force a redraw of scene
                     displayDragonCallback();
                 }else if(bear == true){
-                    Globals::bear->model2world = Globals::bear->model2world * rot;
+                    Globals::bear->model2world =  rot * Globals::bear->model2world;
                     //force a redraw of scene
                     displayBearCallback();
                 }

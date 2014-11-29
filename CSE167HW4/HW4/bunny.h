@@ -51,6 +51,7 @@ public:
     Matrix4 m2w_spotLight;
     void update();
     Material mat;
+    float spot_light_angle;
 };
 
 #endif /* defined(__CSE167HW1__bunny__) */

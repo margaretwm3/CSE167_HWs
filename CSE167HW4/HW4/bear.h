@@ -42,6 +42,7 @@ public:
     double y_biggest = 0;
     double z_smallest = 100;
     double z_biggest = 0;
+    
     //calculate the center of the model
     double center_x, center_y,center_z;
     Light light;
@@ -49,5 +50,6 @@ public:
     Matrix4 m2w_spotLight;
     void update();
     Material mat;
+    float spot_light_angle;
 };
 #endif /* defined(__HW4__bear__) */

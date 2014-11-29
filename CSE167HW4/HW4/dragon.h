@@ -49,7 +49,9 @@ public:
     Matrix4 m2w_spotLight;
     void update();
     Material mat;
+    double spot_light_angle;
 };
+
 
 
 #endif /* defined(__CSE167HW1__dragon__) */

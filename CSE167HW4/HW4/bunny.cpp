@@ -18,7 +18,7 @@ bunny::bunny(){
     int c1,c2;    // characters read from file
     string s1,s2,s3; // string for face
     
-    fp = fopen("/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/bunny.obj","rb");
+    fp = fopen("/Users/margaretwm3/Desktop/CSE167_HWs-master/CSE167HW4/HW4/bunny.obj","rb");
     if (fp==NULL) {
         cerr << "error loading file" << endl; exit(-1);
     }
@@ -101,6 +101,7 @@ bunny::bunny(){
                     light.light_position_s[1],
                     light.light_position_s[2]);
     m2w_spotLight = t;
+    spot_light_angle = 60;
 }
 
 Matrix4& bunny::getMatrix()

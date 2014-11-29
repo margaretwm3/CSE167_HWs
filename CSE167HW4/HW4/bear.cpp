@@ -17,7 +17,7 @@ bear::bear(){
     int c1,c2;    // characters read from file
     string s1,s2,s3; // string for face
     
-    fp = fopen("/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/bear.obj","rb");
+    fp = fopen("/Users/margaretwm3/Desktop/CSE167_HWs-master/CSE167HW4/HW4/bear.obj","r");
     if (fp==NULL) {
         cerr << "error loading file" << endl; exit(-1);
     }
@@ -81,6 +81,7 @@ bear::bear(){
     center_x = 0.5*(x_smallest + x_biggest);
     center_y = 0.5*(y_smallest + y_biggest);
     center_z = 0.5*(z_smallest + z_biggest);
+    
     light = Light();
     //light.setLightPosition(-3, 4, -10, 1.0);
     Matrix4 t = Matrix4();
@@ -96,6 +97,7 @@ bear::bear(){
                     light.light_position_s[1],
                     light.light_position_s[2]);
     m2w_spotLight = t;
+    spot_light_angle = 60;
 }
 
 Matrix4& bear::getMatrix()
@@ -166,4 +168,7 @@ void bear::update(){
     t.identity();
     t.makeTranslate(light.light_position[0], light.light_position[1], light.light_position[2]);
     m2w_light = t;
+    t.identity();
+    t.makeTranslate(light.light_position_s[0], light.light_position_s[1], light.light_position_s[2]);
+    m2w_spotLight= t;
 }

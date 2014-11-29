@@ -21,6 +21,8 @@ namespace Globals
     extern dragon *dragon;
     extern bear *bear;
     extern Shader *shader;
+    extern double spot_light_angle;
 };
+
 
 #endif

@@ -16,7 +16,7 @@ dragon::dragon(){
     int c1,c2;    // characters read from file
     string s1,s2,s3; // string for face
     
-    fp = fopen("/Users/Margaret/Desktop/CSE167_HWs/CSE167HW4/HW4/dragon.obj","r");
+    fp = fopen("/Users/margaretwm3/Desktop/CSE167_HWs-master/CSE167HW4/HW4/dragon.obj","r");
     if (fp==NULL) { cerr << "error loading file" << endl; exit(-1); }
     
     // parse other cases and loop over lines of file
@@ -92,6 +92,7 @@ dragon::dragon(){
                     light.light_position_s[1],
                     light.light_position_s[2]);
     m2w_spotLight = t;
+    spot_light_angle = 60;
 
 }
 
