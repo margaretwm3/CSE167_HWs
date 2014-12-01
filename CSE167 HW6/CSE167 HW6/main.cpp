@@ -2,6 +2,7 @@
 #include <GLUT/glut.h>
 #include <iostream>
 #include <random>
+#include <vector>
 
 using namespace std;
 
@@ -148,9 +149,32 @@ Point Calculate(float u,float v) {
     // having got 4 points, we can use it as a bezier curve
     // to calculate the v direction. This should give us our
     // final point
-    //
     return CalculateV(v,temp);
 }
+
+vector<Point> controlPoint_t;
+vector<Point> controlPoint_t_delta;
+//for calculating the normal
+void calculateNormal(){
+  //for each set of 4 control points, create a new control point q
+    // use the parametric time value 0 to 1
+    for(int j=0;j!=LOD;++j) {// calculate the parametric u value
+        // calculate the parametric v value
+        float v = (float)j/(LOD-1);
+        cout << "v is " << v << endl;
+        
+        for (int i=0;i!=LOD;++i){
+            float u = (float)i/(LOD-1);
+            cout << "u is " << u << endl;
+            // calculate the point on the surface
+            Point q = Calculate(u,j);
+            Point q1 = Calculate(u+delta_t, j+delta_t);
+            controlPoint_t.push_back(q);
+            controlPoint_t_delta.push_back(q1);
+        }
+    }
+}
+
 
 //------------------------------------------------------------	OnReshape()
 //
@@ -191,41 +215,6 @@ void OnDraw() {
     gluLookAt(0,20,20,	//	eye pos
               0,0,0,	//	aim point
               0,1,0);	//	up direction
-
-   /*
-    glBegin(GL_QUADS);
-    // use the parametric time value 0 to 1
-    for(int i=0;i!=LOD;++i) {
-        // calculate the parametric u value
-        float u = (float)i/(LOD-1);
-        float u1 = (float)(i+1)/(LOD-1);
-        cout << "u is " << u << endl;
-        cout << "u1 is " << u1 << endl;
-        
-        for(int j=0;j!=LOD;++j) {
-            // calculate the parametric v value
-            float v = (float)j/(LOD-1);
-            float v1 = (float)(j+1)/(LOD-1);
-            cout << "v is " << v << endl;
-            cout << "v1 is " << v1 << endl;
-            
-            // calculate the point on the surface
-            Point p = Calculate(u1,v);
-            Point p1 = Calculate(u1,v1);
-            Point p2 = Calculate(u,v1);
-            Point p3 = Calculate(u,v);
-            
-            glColor3f(((double) rand() / (RAND_MAX)),((double) rand() / (RAND_MAX)),
-                      ((double) rand() / (RAND_MAX)));
-            glVertex3f(p.x,p.y,p.z);
-            glVertex3f(p1.x,p1.y,p1.z);
-            glVertex3f(p2.x,p2.y,p2.z);
-            glVertex3f(p3.x,p3.y,p3.z);
-         }
-    }
-    
-    glEnd();
-    */
     
      glBegin(GL_QUADS);
      // use the parametric time value 0 to 1
@@ -243,13 +232,12 @@ void OnDraw() {
              cout << "u1 is " << u1 << endl;
      
              // calculate the point on the surface
-             Point p = Calculate(u1,v);
+             Point p =  Calculate(u1,v);
              Point p1 = Calculate(u1,v1);
              Point p2 = Calculate(u,v1);
              Point p3 = Calculate(u,v);
              
-             glColor3f(((double) rand() / (RAND_MAX)),((double) rand() / (RAND_MAX)),
-                       ((double) rand() / (RAND_MAX)));
+             glColor3f(0.8,0.5,1);
              glVertex3f(p.x,p.y,p.z);
              glVertex3f(p1.x,p1.y,p1.z);
              glVertex3f(p2.x,p2.y,p2.z);
@@ -261,6 +249,9 @@ void OnDraw() {
     // currently we've been drawing to the back buffer, we need
     // to swap the back buffer with the front one to make the image visible
     glutSwapBuffers();
+    
+    //solve for the first tangent approximation
+    
 }
 
 //------------------------------------------------------------	OnInit()
