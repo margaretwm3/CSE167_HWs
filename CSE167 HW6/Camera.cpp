@@ -14,6 +14,13 @@ Camera::Camera(){
     c.identity();
 }
 
+/*
+GLdouble* Camera::getGLMatrix(){
+  
+
+}
+ */
+
 void Camera::set(Vector3& e,Vector3& d, Vector3& up){
     //calculate z-axis
      Vector3 z_axis = e-d;
