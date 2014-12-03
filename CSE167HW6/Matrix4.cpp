@@ -14,6 +14,7 @@ Matrix4::Matrix4()
       m[i][j] = 0;
     }
   }
+    
 }
 
 Matrix4::Matrix4(Vector3& a, Vector3& b, Vector3& c, Vector3& e,double x,double y,double z,double w){

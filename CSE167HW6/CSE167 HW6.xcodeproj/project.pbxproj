@@ -17,16 +17,39 @@
 		13E4833D1A2C0AEE0047408E /* Vector3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13E4833A1A2C0AEE0047408E /* Vector3.cpp */; };
 		13E4833E1A2C0AEE0047408E /* Vector4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13E4833B1A2C0AEE0047408E /* Vector4.cpp */; };
 		13E483411A2C0BEF0047408E /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13E483401A2C0BEF0047408E /* Camera.cpp */; };
+		13F0BFCF1A2D237E00FE187C /* PalldioPalace_extern_back.jpg in Copy Files */ = {isa = PBXBuildFile; fileRef = 13F0BFC91A2D237E00FE187C /* PalldioPalace_extern_back.jpg */; };
+		13F0BFD01A2D237E00FE187C /* PalldioPalace_extern_base.jpg in Copy Files */ = {isa = PBXBuildFile; fileRef = 13F0BFCA1A2D237E00FE187C /* PalldioPalace_extern_base.jpg */; };
+		13F0BFD11A2D237E00FE187C /* PalldioPalace_extern_front.jpg in Copy Files */ = {isa = PBXBuildFile; fileRef = 13F0BFCB1A2D237E00FE187C /* PalldioPalace_extern_front.jpg */; };
+		13F0BFD21A2D237E00FE187C /* PalldioPalace_extern_left.jpg in Copy Files */ = {isa = PBXBuildFile; fileRef = 13F0BFCC1A2D237E00FE187C /* PalldioPalace_extern_left.jpg */; };
+		13F0BFD31A2D237E00FE187C /* PalldioPalace_extern_right.jpg in Copy Files */ = {isa = PBXBuildFile; fileRef = 13F0BFCD1A2D237E00FE187C /* PalldioPalace_extern_right.jpg */; };
+		13F0BFD41A2D237E00FE187C /* PalldioPalace_extern_top.jpg in Copy Files */ = {isa = PBXBuildFile; fileRef = 13F0BFCE1A2D237E00FE187C /* PalldioPalace_extern_top.jpg */; };
+		13F0BFD91A2D3BC700FE187C /* image_DXT.c in Sources */ = {isa = PBXBuildFile; fileRef = 13F0BFD51A2D3BC700FE187C /* image_DXT.c */; };
+		13F0BFDA1A2D3BC700FE187C /* image_helper.c in Sources */ = {isa = PBXBuildFile; fileRef = 13F0BFD61A2D3BC700FE187C /* image_helper.c */; };
+		13F0BFDB1A2D3BC700FE187C /* SOIL.c in Sources */ = {isa = PBXBuildFile; fileRef = 13F0BFD71A2D3BC700FE187C /* SOIL.c */; };
+		13F0BFDC1A2D3BC700FE187C /* stb_image_aug.c in Sources */ = {isa = PBXBuildFile; fileRef = 13F0BFD81A2D3BC700FE187C /* stb_image_aug.c */; };
+		13F0BFE31A2D3CCE00FE187C /* image_DXT.h in Sources */ = {isa = PBXBuildFile; fileRef = 13F0BFDD1A2D3CCE00FE187C /* image_DXT.h */; };
+		13F0BFE41A2D3CCE00FE187C /* image_helper.h in Sources */ = {isa = PBXBuildFile; fileRef = 13F0BFDE1A2D3CCE00FE187C /* image_helper.h */; };
+		13F0BFE51A2D3CCE00FE187C /* SOIL.h in Sources */ = {isa = PBXBuildFile; fileRef = 13F0BFDF1A2D3CCE00FE187C /* SOIL.h */; };
+		13F0BFE61A2D3CCE00FE187C /* stb_image_aug.h in Sources */ = {isa = PBXBuildFile; fileRef = 13F0BFE01A2D3CCE00FE187C /* stb_image_aug.h */; };
+		13F0BFE71A2D3CCE00FE187C /* stbi_DDS_aug_c.h in Sources */ = {isa = PBXBuildFile; fileRef = 13F0BFE11A2D3CCE00FE187C /* stbi_DDS_aug_c.h */; };
+		13F0BFE81A2D3CCE00FE187C /* stbi_DDS_aug.h in Sources */ = {isa = PBXBuildFile; fileRef = 13F0BFE21A2D3CCE00FE187C /* stbi_DDS_aug.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		13E483181A2BDCBC0047408E /* CopyFiles */ = {
+		13E483181A2BDCBC0047408E /* Copy Files */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
+			dstPath = Users/margaretwm3/Desktop/CSE167_HWs/CSE167HW6;
+			dstSubfolderSpec = 7;
 			files = (
+				13F0BFCF1A2D237E00FE187C /* PalldioPalace_extern_back.jpg in Copy Files */,
+				13F0BFD01A2D237E00FE187C /* PalldioPalace_extern_base.jpg in Copy Files */,
+				13F0BFD11A2D237E00FE187C /* PalldioPalace_extern_front.jpg in Copy Files */,
+				13F0BFD21A2D237E00FE187C /* PalldioPalace_extern_left.jpg in Copy Files */,
+				13F0BFD31A2D237E00FE187C /* PalldioPalace_extern_right.jpg in Copy Files */,
+				13F0BFD41A2D237E00FE187C /* PalldioPalace_extern_top.jpg in Copy Files */,
 			);
+			name = "Copy Files";
 			runOnlyForDeploymentPostprocessing = 1;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -53,6 +76,22 @@
 		13E4833B1A2C0AEE0047408E /* Vector4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Vector4.cpp; sourceTree = "<group>"; };
 		13E4833F1A2C0BEF0047408E /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
 		13E483401A2C0BEF0047408E /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Camera.cpp; sourceTree = "<group>"; };
+		13F0BFC91A2D237E00FE187C /* PalldioPalace_extern_back.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = PalldioPalace_extern_back.jpg; sourceTree = "<group>"; };
+		13F0BFCA1A2D237E00FE187C /* PalldioPalace_extern_base.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = PalldioPalace_extern_base.jpg; sourceTree = "<group>"; };
+		13F0BFCB1A2D237E00FE187C /* PalldioPalace_extern_front.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = PalldioPalace_extern_front.jpg; sourceTree = "<group>"; };
+		13F0BFCC1A2D237E00FE187C /* PalldioPalace_extern_left.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = PalldioPalace_extern_left.jpg; sourceTree = "<group>"; };
+		13F0BFCD1A2D237E00FE187C /* PalldioPalace_extern_right.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = PalldioPalace_extern_right.jpg; sourceTree = "<group>"; };
+		13F0BFCE1A2D237E00FE187C /* PalldioPalace_extern_top.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = PalldioPalace_extern_top.jpg; sourceTree = "<group>"; };
+		13F0BFD51A2D3BC700FE187C /* image_DXT.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = image_DXT.c; sourceTree = "<group>"; };
+		13F0BFD61A2D3BC700FE187C /* image_helper.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = image_helper.c; sourceTree = "<group>"; };
+		13F0BFD71A2D3BC700FE187C /* SOIL.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = SOIL.c; sourceTree = "<group>"; };
+		13F0BFD81A2D3BC700FE187C /* stb_image_aug.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = stb_image_aug.c; sourceTree = "<group>"; };
+		13F0BFDD1A2D3CCE00FE187C /* image_DXT.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = image_DXT.h; sourceTree = "<group>"; };
+		13F0BFDE1A2D3CCE00FE187C /* image_helper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = image_helper.h; sourceTree = "<group>"; };
+		13F0BFDF1A2D3CCE00FE187C /* SOIL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SOIL.h; sourceTree = "<group>"; };
+		13F0BFE01A2D3CCE00FE187C /* stb_image_aug.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stb_image_aug.h; sourceTree = "<group>"; };
+		13F0BFE11A2D3CCE00FE187C /* stbi_DDS_aug_c.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stbi_DDS_aug_c.h; sourceTree = "<group>"; };
+		13F0BFE21A2D3CCE00FE187C /* stbi_DDS_aug.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stbi_DDS_aug.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +110,22 @@
 		13E483111A2BDCBC0047408E = {
 			isa = PBXGroup;
 			children = (
+				13F0BFDD1A2D3CCE00FE187C /* image_DXT.h */,
+				13F0BFDE1A2D3CCE00FE187C /* image_helper.h */,
+				13F0BFDF1A2D3CCE00FE187C /* SOIL.h */,
+				13F0BFE01A2D3CCE00FE187C /* stb_image_aug.h */,
+				13F0BFE11A2D3CCE00FE187C /* stbi_DDS_aug_c.h */,
+				13F0BFE21A2D3CCE00FE187C /* stbi_DDS_aug.h */,
+				13F0BFD51A2D3BC700FE187C /* image_DXT.c */,
+				13F0BFD61A2D3BC700FE187C /* image_helper.c */,
+				13F0BFD71A2D3BC700FE187C /* SOIL.c */,
+				13F0BFD81A2D3BC700FE187C /* stb_image_aug.c */,
+				13F0BFC91A2D237E00FE187C /* PalldioPalace_extern_back.jpg */,
+				13F0BFCA1A2D237E00FE187C /* PalldioPalace_extern_base.jpg */,
+				13F0BFCB1A2D237E00FE187C /* PalldioPalace_extern_front.jpg */,
+				13F0BFCC1A2D237E00FE187C /* PalldioPalace_extern_left.jpg */,
+				13F0BFCD1A2D237E00FE187C /* PalldioPalace_extern_right.jpg */,
+				13F0BFCE1A2D237E00FE187C /* PalldioPalace_extern_top.jpg */,
 				13E483311A2C0AA90047408E /* color.frag */,
 				13E483321A2C0AA90047408E /* color.vert */,
 				13E483361A2C0AEE0047408E /* Matrix4.h */,
@@ -120,7 +175,7 @@
 			buildPhases = (
 				13E483161A2BDCBC0047408E /* Sources */,
 				13E483171A2BDCBC0047408E /* Frameworks */,
-				13E483181A2BDCBC0047408E /* CopyFiles */,
+				13E483181A2BDCBC0047408E /* Copy Files */,
 			);
 			buildRules = (
 			);
@@ -167,6 +222,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				13F0BFE31A2D3CCE00FE187C /* image_DXT.h in Sources */,
+				13F0BFE41A2D3CCE00FE187C /* image_helper.h in Sources */,
+				13F0BFE51A2D3CCE00FE187C /* SOIL.h in Sources */,
+				13F0BFE61A2D3CCE00FE187C /* stb_image_aug.h in Sources */,
+				13F0BFE71A2D3CCE00FE187C /* stbi_DDS_aug_c.h in Sources */,
+				13F0BFE81A2D3CCE00FE187C /* stbi_DDS_aug.h in Sources */,
+				13F0BFD91A2D3BC700FE187C /* image_DXT.c in Sources */,
+				13F0BFDA1A2D3BC700FE187C /* image_helper.c in Sources */,
+				13F0BFDB1A2D3BC700FE187C /* SOIL.c in Sources */,
+				13F0BFDC1A2D3BC700FE187C /* stb_image_aug.c in Sources */,
 				13E4833E1A2C0AEE0047408E /* Vector4.cpp in Sources */,
 				13E4832F1A2C0AA00047408E /* Light.cpp in Sources */,
 				13E4832A1A2BDD1A0047408E /* main.cpp in Sources */,
@@ -288,6 +353,7 @@
 				13E483231A2BDCBC0047408E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
