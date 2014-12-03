@@ -26,28 +26,28 @@ Camera cameraMatrix = Camera();
 /// 4x4 grid of points that will define the surface
 Point Points[4][4] = {
     {
-        { 30,-60,50 },
-        {  15,-60,50},
-        { -15,-60,50 },
-        {-30,-60,50 }
+        { 26,-55,50 },
+        {  13,-55,50},
+        { -13,-55,50 },
+        {-26,-55,50 }
     },
     {
-        { 30, -60,25 },
-        {  15,-60,25 },
-        { -15,-60,25 },
-        {-30, -60,25 }
+        { 26, -55,25 },
+        {  13,-55,25 },
+        { -13,-55,25 },
+        {-26, -55,25 }
     },
     {
-        { 30, -60,-25 },
-        {  15,-60,-25 },
-        { -15,-60,-25 },
-        {-30, -60,-25 }
+        { 26, -55,-25 },
+        {  13,-55,-25 },
+        { -13,-55,-25 },
+        {-26, -55,-25 }
     },
     {
-        { 30, -60,-50 },
-        {  15,-60,-50},
-        { -15,-60,-50},
-        {-30, -60,-50 }
+        { 26, -55,-50 },
+        {  13,-55,-50},
+        { -13,-55,-50},
+        {-26, -55,-50}
     }
 };
 
@@ -135,19 +135,7 @@ GLuint texture[5];
             return false;
         }
         
-        /*
-        // Typical Texture Generation Using Data From The Bitmap
-        glBindTexture(GL_TEXTURE_2D, texture[0]);
-        */
-        // Make sure no bytes are padded:
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        // Select GL_MODULATE to mix texture with polygon color for shading:
-        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-        // Use bilinear interpolation:
-        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-        
-        return true;
+         return true;
     }
 
 
@@ -293,7 +281,6 @@ Vector3 calculateNormal(float t,float v){
     return normal;
 }
 
-
 //------------------------------------------------------------	OnReshape()
 //
 void OnReshape(int w, int h)
@@ -320,10 +307,8 @@ void OnReshape(int w, int h)
 //------------------------------------------------------------	OnDraw()
 //
 void OnDraw() {
-    
     // clear the screen & depth buffer
     glClear(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);
-    
     // clear the previous transform
     glLoadIdentity();
     /*
@@ -334,8 +319,7 @@ void OnDraw() {
     gluLookAt(0,20,20,	//	eye pos
               0,0,0,	//	aim point
               0,1,0);	//	up direction
-    
-     glBegin(GL_QUADS);
+    glBegin(GL_QUADS);
     // use the parametric time value 0 to 1
     for(int j=0;j!=LOD-1;++j) {// calculate the parametric u value
          // calculate the parametric v value
@@ -374,31 +358,24 @@ void OnDraw() {
              glVertex3f(p3.x,p3.y,p3.z);
         }
      }
-     glEnd();
+    glEnd();
     
-    LoadGLTextures();
     //skybox
-    // Store the current matrix
-    glPushMatrix();
-    /*
-    // Reset and transform the matrix.
-    glLoadIdentity();
+    LoadGLTextures();
+    glPushMatrix();// Store the current matrix
+    glLoadIdentity();// Reset and transform the matrix.
     // set the camera position
-    
     gluLookAt(0,20,20,	//	eye pos
               0,0,0,	//	aim point
               0,1,0);	//	up direction
-    */
+    
     // Enable/Disable features
     glPushAttrib(GL_ENABLE_BIT);
     glEnable(GL_TEXTURE_2D);
-    /*
     glDisable(GL_DEPTH_TEST);
-   
     glDisable(GL_BLEND);
-    */
-    //glDisable(GL_LIGHTING);
-     // Just in case we set all vertices to white.
+    glDisable(GL_LIGHTING);
+    // Just in case we set all vertices to white.
     glColor4f(1,1,1,1);
     
     // Render the front quad
@@ -410,59 +387,58 @@ void OnDraw() {
     // Use bilinear interpolation:
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-    glBegin(GL_QUADS);
-    glTexCoord2f(0, 0); glVertex3f(  1000, -1000, -100 );
-    glTexCoord2f(1, 0); glVertex3f( -1000, -1000, -100);
-    glTexCoord2f(1, 1); glVertex3f( -1000, 1000, -100 );
-    glTexCoord2f(0, 1); glVertex3f(  1000,  1000, -100 );
-    glEnd();
     
-    /*
+    glBegin(GL_QUADS);
+        glNormal3f(0, 0,1);
+        glTexCoord2f(0, 0); glVertex3f(  13, -22, -10);
+        glTexCoord2f(1, 0); glVertex3f(  -13, -22, -10);
+        glTexCoord2f(1, 1); glVertex3f(  -13, 22,-10);
+        glTexCoord2f(0, 1); glVertex3f(  13,  22, -10 );
+        glEnd();
     
     // Render the left quad
     glBindTexture(GL_TEXTURE_2D, texture[1]);
     glBegin(GL_QUADS);
-    glTexCoord2f(0, 0); glVertex3f(  0.5f, -0.5f,  0.5f );
-    glTexCoord2f(1, 0); glVertex3f(  0.5f, -0.5f, -0.5f );
-    glTexCoord2f(1, 1); glVertex3f(  0.5f,  0.5f, -0.5f );
-    glTexCoord2f(0, 1); glVertex3f(  0.5f,  0.5f,  0.5f );
+        glNormal3f(-1,0,0);
+        glTexCoord2f(0, 0); glVertex3f(  -14, -19,  20);
+        glTexCoord2f(1, 0); glVertex3f(  -14, -19, -20 );
+        glTexCoord2f(1, 1); glVertex3f(  -14,  19, -20 );
+        glTexCoord2f(0, 1); glVertex3f(  -14,  19,  20 );
     glEnd();
     
     // Render the back quad
     glBindTexture(GL_TEXTURE_2D,texture[2]);
     glBegin(GL_QUADS);
-    glTexCoord2f(0, 0); glVertex3f( -0.5f, -0.5f,  0.5f );
-    glTexCoord2f(1, 0); glVertex3f(  0.5f, -0.5f,  0.5f );
-    glTexCoord2f(1, 1); glVertex3f(  0.5f,  0.5f,  0.5f );
-    glTexCoord2f(0, 1); glVertex3f( -0.5f,  0.5f,  0.5f );
-
+        glNormal3f(0,0,-1);
+        glTexCoord2f(0, 0); glVertex3f( -13, -22,  -25);
+        glTexCoord2f(1, 0); glVertex3f(  13, -22,  -25 );
+        glTexCoord2f(1, 1); glVertex3f(  13,  22,  -25 );
+        glTexCoord2f(0, 1); glVertex3f( -13,  22,  -25 );
     glEnd();
-     
-     */
     
-    /*
+    // Render the right quad
+    glBindTexture(GL_TEXTURE_2D, texture[3]);
     glBegin(GL_QUADS);
-    glTexCoord2f(0,0);
-    glVertex3f(1, -1, 1);
-    glTexCoord2f(1,0);
-    glVertex3f(-1, -1, -1);
-    glTexCoord2f(1,1);
-    glVertex3f(-1, 1, -1);
-    glTexCoord2f(0,1);
-    glVertex3f(1, 1, -1);
-   
+        glNormal3f(1,0,0);
+        glTexCoord2f(0, 0); glVertex3f( 14, -22, -10);
+        glTexCoord2f(1, 0); glVertex3f( 14, -22, 10 );
+        glTexCoord2f(1, 1); glVertex3f( 14,  22, 10 );
+        glTexCoord2f(0, 1); glVertex3f( 14,  22, -10);
     glEnd();
-     */
     
-    /*
+    // Render the top quad
+    glBindTexture(GL_TEXTURE_2D, texture[4]);
     glBegin(GL_QUADS);
-    glNormal3f(0.0, 0.0, 1.0);
-    glTexCoord2d(1, 1); glVertex3f(0.0, 0.0, -2);
-    glTexCoord2d(1, 0); glVertex3f(1, 0, -2);
-    glTexCoord2d(0, 0); glVertex3f(1.0, 1.0, -2);
-    glTexCoord2d(0, 1); glVertex3f(0, 1.0, -2);
+        glNormal3f(0, 1,0);
+        glTexCoord2f(0, 1); glVertex3f( -30,  23, -10 );
+        glTexCoord2f(0, 0); glVertex3f( -30,  23,  10 );
+        glTexCoord2f(1, 0); glVertex3f(  30,  23,  10 );
+        glTexCoord2f(1, 1); glVertex3f(  30,  23, -10);
     glEnd();
-     */
+    
+    // Restore enable bits and matrix
+    glPopAttrib();
+    glPopMatrix();
     // currently we've been drawing to the back buffer, we need
     // to swap the back buffer with the front one to make the image visible
     glutSwapBuffers();
