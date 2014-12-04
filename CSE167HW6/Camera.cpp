@@ -12,14 +12,10 @@
 //constructor of Camera object
 Camera::Camera(){
     c.identity();
+    center_e = new Vector3(0,20,20);
+    up = new Vector3(0,1,0);
+    look_at_d = new Vector3(0,0,0);
 }
-
-/*
-GLdouble* Camera::getGLMatrix(){
-  
-
-}
- */
 
 void Camera::set(Vector3& e,Vector3& d, Vector3& up){
     //calculate z-axis
@@ -35,13 +31,18 @@ void Camera::set(Vector3& e,Vector3& d, Vector3& up){
     
     //row-major ordering of the camera matrix
     c = Matrix4(x_axis,y_axis,z_axis,e,0.0,0.0,0.0,1.0);
+    this->inverse();
 }
 
+//getCameraMatrix will call the inverse camera matrix
 Matrix4& Camera::getCameraMatrix(){
-    inverse();
+    //inverse();
     return c;
 }
 
+void Camera::set(){
+    this->set(*(this->center_e), *(this->look_at_d), *(this->up));
+}
 
 //inverse of the camera matrix
 void Camera::inverse(){
@@ -62,4 +63,35 @@ void Camera::inverse(){
     Matrix4 translate = Matrix4();
     translate.makeTranslate(-c.m[0][3], -c.m[1][3], -c.m[2][3]);
     c  = rotate * translate;
+}
+
+//change the eye position and update the camera matrix before inverse
+void Camera::xDown(){
+    --(this->center_e->x);
+    this->set(*(this->center_e), *(this->look_at_d), *(this->up));
+}
+
+void Camera::xUp(){
+    ++(this->center_e->x);
+    this->set(*(this->center_e), *(this->look_at_d), *(this->up));
+}
+
+void Camera::yDown(){
+    --(this->center_e->y);
+    this->set(*(this->center_e), *(this->look_at_d), *(this->up));
+}
+
+void Camera::yUp(){
+    ++(this->center_e->y);
+    this->set(*(this->center_e), *(this->look_at_d), *(this->up));
+}
+
+void Camera::zDown(){
+    --(this->center_e->z);
+    this->set(*(this->center_e), *(this->look_at_d), *(this->up));
+}
+
+void Camera::zUp(){
+    ++(this->center_e->z);
+    this->set(*(this->center_e), *(this->look_at_d), *(this->up));
 }

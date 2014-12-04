@@ -19,11 +19,9 @@ struct Point {
 
 Matrix4 model2world = Matrix4();
 Camera cameraMatrix = Camera();
-//Vector3 *e = new Vector3(0,0,20);
-//Vector3 *d = new Vector3(0,0,0);
-//Vector3 *up =new Vector3(0,1,0);
 
 /// 4x4 grid of points that will define the surface
+
 Point Points[4][4] = {
     {
         { 26,-55,50 },
@@ -51,6 +49,34 @@ Point Points[4][4] = {
     }
 };
 
+/*
+Point Points[4][4] = {
+    {
+        { 260,-550,500 },
+        {  130,-550,500},
+        { -130,-550,500 },
+        {-260,-550,500 }
+    },
+    {
+        { 260, -550,250 },
+        {  130,-550,250 },
+        { -130,-550,250 },
+        {-260, -550,250 }
+    },
+    {
+        { 260, -550,-250 },
+        {  130,-550,-250 },
+        { -130,-550,-250 },
+        {-260, -550,-250 }
+    },
+    {
+        { 260, -550,-500 },
+        {  130,-55,-500},
+        { -130,-550,-500},
+        {-260, -550,-500}
+    }
+};
+*/
 // the level of detail of the surface
 unsigned int LOD=100;
 //calculate the
@@ -106,36 +132,30 @@ GLuint texture[5];
         
         if(texture[0] == 0)
         {
-            printf( "SOIL loading error: '%s'\n", SOIL_last_result() );
+            printf( "SOIL loading error 0: '%s'\n", SOIL_last_result() );
             return false;
         }
         if(texture[1] == 0)
         {
-            printf( "SOIL loading error: '%s'\n", SOIL_last_result() );
+            printf( "SOIL loading error 1: '%s'\n", SOIL_last_result() );
             return false;
         }
         if(texture[2] == 0)
         {
-            printf( "SOIL loading error: '%s'\n", SOIL_last_result() );
+            printf( "SOIL loading error 2: '%s'\n", SOIL_last_result() );
             return false;
         }
         if(texture[3] == 0)
         {
-            printf( "SOIL loading error: '%s'\n", SOIL_last_result() );
+            printf( "SOIL loading error 3: '%s'\n", SOIL_last_result() );
             return false;
         }
         if(texture[4] == 0)
         {
-            printf( "SOIL loading error: '%s'\n", SOIL_last_result() );
+            printf( "SOIL loading error 4: '%s'\n", SOIL_last_result() );
             return false;
         }
-        if(texture[5] == 0)
-        {
-            printf( "SOIL loading error: '%s'\n", SOIL_last_result() );
-            return false;
-        }
-        
-         return true;
+        return true;
     }
 
 
@@ -309,30 +329,22 @@ void OnReshape(int w, int h)
 void OnDraw() {
     // clear the screen & depth buffer
     glClear(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);
-    // clear the previous transform
-    glLoadIdentity();
-    /*
-    cameraMatrix.set(*e,*d,*up);
-    Matrix4 camMatrix = cameraMatrix.getCameraMatrix();
-    */
-    // set the camera position
-    gluLookAt(0,20,20,	//	eye pos
-              0,0,0,	//	aim point
-              0,1,0);	//	up direction
+    glMatrixMode(GL_MODELVIEW);
+    Matrix4 glmatrix = cameraMatrix.getCameraMatrix();
+    Matrix4 tmp = glmatrix * model2world;
+    tmp.transpose();
+    glLoadMatrixd(tmp.getPointer());
+    
     glBegin(GL_QUADS);
     // use the parametric time value 0 to 1
     for(int j=0;j!=LOD-1;++j) {// calculate the parametric u value
          // calculate the parametric v value
          float v = (float)j/(LOD-1);
          float v1 = (float)(j+1)/(LOD-1);
-         cout << "v is " << v << endl;
-         cout << "v1 is " << v1 << endl;
 
          for (int i=0;i!=LOD-1;++i){
              float u = (float)i/(LOD-1);
              float u1 = (float)(i+1)/(LOD-1);
-             cout << "u is " << u << endl;
-             cout << "u1 is " << u1 << endl;
      
              // calculate the point on the surface
              Point p =  Calculate(u1,v);
@@ -359,16 +371,17 @@ void OnDraw() {
         }
      }
     glEnd();
-    
+  
     //skybox
     LoadGLTextures();
     glPushMatrix();// Store the current matrix
-    glLoadIdentity();// Reset and transform the matrix.
-    // set the camera position
-    gluLookAt(0,20,20,	//	eye pos
-              0,0,0,	//	aim point
-              0,1,0);	//	up direction
-    
+    //glLoadIdentity();// Reset and transform the matrix.
+    glmatrix = cameraMatrix.getCameraMatrix();//get the camera matrix
+    tmp = glmatrix * model2world;
+    tmp.transpose();
+    glMatrixMode(GL_MODELVIEW);
+    glLoadMatrixd(tmp.getPointer());
+
     // Enable/Disable features
     glPushAttrib(GL_ENABLE_BIT);
     glEnable(GL_TEXTURE_2D);
@@ -441,6 +454,7 @@ void OnDraw() {
     glPopMatrix();
     // currently we've been drawing to the back buffer, we need
     // to swap the back buffer with the front one to make the image visible
+
     glutSwapBuffers();
     
     //solve for the first tangent approximation
@@ -453,7 +467,6 @@ void OnInit() {
     glEnable(GL_DEPTH_TEST);
     // Enable lighting
     GLfloat whiteMaterial[]={1.0f, 1.0f, 1.0f, 1.0f};
-    
     GLfloat DiffuseLight[] = {0.2, 2, 1}; //set DiffuseLight
     glLightfv (GL_LIGHT0, GL_DIFFUSE, DiffuseLight); //change the light accordingly
     GLfloat LightPosition[] = {0, 0, 1, 0}; //set the LightPosition to the specified values
@@ -462,6 +475,8 @@ void OnInit() {
     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, whiteMaterial);
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
+    model2world.identity();
+    cameraMatrix.set();//will set the camera matrix on default setting
 }
 
 //------------------------------------------------------------	OnExit()
@@ -486,6 +501,30 @@ void OnKeyPress(unsigned char key,int,int) {
             // have a minimum LOD value
             if (LOD<3)
                 LOD=3;
+            break;
+        //move the camera eye x down
+        case 'x':
+            cameraMatrix.xDown();
+            break;
+        //move the camera eye x up
+        case 'X':
+            cameraMatrix.xUp();
+            break;
+        //move the camera eye y down
+        case 'y':
+            cameraMatrix.yDown();
+            break;
+        //move the camera eye y up
+        case 'Y':
+            cameraMatrix.yUp();
+            break;
+        //move the camera eye z down
+        case 'z':
+            cameraMatrix.zDown();
+            break;
+        //move the camera eye z up
+        case 'Z':
+            cameraMatrix.zUp();
             break;
         case 27:
             exit(0);
@@ -513,7 +552,7 @@ int main(int argc,char** argv) {
     // create the window
     glutCreateWindow("CSE 167 HW6 ");
     
-    LoadGLTextures();
+    //LoadGLTextures();
     
     // set the function to use to draw our scene
     glutDisplayFunc(OnDraw);

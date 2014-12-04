@@ -28,7 +28,14 @@ class Camera{
         //access the components of the camera matrix
         Matrix4& getCameraMatrix();
         GLdouble* getGLMatrix();
+        void set();
         void set(Vector3& e, Vector3& d, Vector3& up); // calculate the camera matrix
+        void xDown();
+        void xUp();
+        void yDown();
+        void yUp();
+        void zDown();
+        void zUp();
         void inverse();//calculate the inverse of the camera matrix
 };
 
