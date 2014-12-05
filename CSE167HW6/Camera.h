@@ -17,13 +17,13 @@
 
 class Camera{
     //member variables
-    protected:
+    public:
         Vector3 *center_e;
         Vector3 *up;
         Vector3 *look_at_d;
         Matrix4 c;
     
-    public:
+    
         Camera();
         //access the components of the camera matrix
         Matrix4& getCameraMatrix();
@@ -37,6 +37,7 @@ class Camera{
         void zDown();
         void zUp();
         void inverse();//calculate the inverse of the camera matrix
+    
 };
 
 

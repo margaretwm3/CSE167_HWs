@@ -24,59 +24,31 @@ Camera cameraMatrix = Camera();
 
 Point Points[4][4] = {
     {
-        { 26,-55,50 },
-        {  13,-55,50},
-        { -13,-55,50 },
-        {-26,-55,50 }
+        { 27,-55,50 },
+        {  12,-55,50},
+        { -12,-55,50 },
+        {-27,-55,50 }
     },
     {
-        { 26, -55,25 },
-        {  13,-55,25 },
-        { -13,-55,25 },
-        {-26, -55,25 }
+        { 27, -55,25 },
+        {  12,-55,25 },
+        { -12,-55,25 },
+        {-27, -55,25 }
     },
     {
-        { 26, -55,-25 },
-        {  13,-55,-25 },
-        { -13,-55,-25 },
-        {-26, -55,-25 }
+        { 27, -55,-25 },
+        {  12,-55,-25 },
+        { -12,-55,-25 },
+        {-27, -55,-25 }
     },
     {
-        { 26, -55,-50 },
-        {  13,-55,-50},
-        { -13,-55,-50},
-        {-26, -55,-50}
+        { 27, -55,-50 },
+        {  12,-55,-50},
+        { -12,-55,-50},
+        {-27, -55,-50}
     }
 };
 
-/*
-Point Points[4][4] = {
-    {
-        { 260,-550,500 },
-        {  130,-550,500},
-        { -130,-550,500 },
-        {-260,-550,500 }
-    },
-    {
-        { 260, -550,250 },
-        {  130,-550,250 },
-        { -130,-550,250 },
-        {-260, -550,250 }
-    },
-    {
-        { 260, -550,-250 },
-        {  130,-550,-250 },
-        { -130,-550,-250 },
-        {-260, -550,-250 }
-    },
-    {
-        { 260, -550,-500 },
-        {  130,-55,-500},
-        { -130,-550,-500},
-        {-260, -550,-500}
-    }
-};
-*/
 // the level of detail of the surface
 unsigned int LOD=100;
 //calculate the
@@ -373,7 +345,6 @@ void OnDraw() {
     glEnd();
   
     //skybox
-    LoadGLTextures();
     glPushMatrix();// Store the current matrix
     //glLoadIdentity();// Reset and transform the matrix.
     glmatrix = cameraMatrix.getCameraMatrix();//get the camera matrix
@@ -403,50 +374,53 @@ void OnDraw() {
     
     glBegin(GL_QUADS);
         glNormal3f(0, 0,1);
-        glTexCoord2f(0, 0); glVertex3f(  13, -22, -10);
-        glTexCoord2f(1, 0); glVertex3f(  -13, -22, -10);
-        glTexCoord2f(1, 1); glVertex3f(  -13, 22,-10);
-        glTexCoord2f(0, 1); glVertex3f(  13,  22, -10 );
+        glTexCoord2f(0, 0); glVertex3f(  15, -25, -15);
+        glTexCoord2f(1, 0); glVertex3f(  -15, -25, -15);
+        glTexCoord2f(1, 1); glVertex3f(  -15, 25,-15);
+        glTexCoord2f(0, 1); glVertex3f(  15,  25, -15 );
         glEnd();
+    
     
     // Render the left quad
     glBindTexture(GL_TEXTURE_2D, texture[1]);
     glBegin(GL_QUADS);
         glNormal3f(-1,0,0);
-        glTexCoord2f(0, 0); glVertex3f(  -14, -19,  20);
-        glTexCoord2f(1, 0); glVertex3f(  -14, -19, -20 );
-        glTexCoord2f(1, 1); glVertex3f(  -14,  19, -20 );
-        glTexCoord2f(0, 1); glVertex3f(  -14,  19,  20 );
+        glTexCoord2f(0, 0); glVertex3f(  -15, -25, 15);
+        glTexCoord2f(1, 0); glVertex3f(  -15, -25, -15 );
+        glTexCoord2f(1, 1); glVertex3f(  -15,  25, -15);
+        glTexCoord2f(0, 1); glVertex3f(  -15,  25, 15);
     glEnd();
+    
     
     // Render the back quad
     glBindTexture(GL_TEXTURE_2D,texture[2]);
     glBegin(GL_QUADS);
         glNormal3f(0,0,-1);
-        glTexCoord2f(0, 0); glVertex3f( -13, -22,  -25);
-        glTexCoord2f(1, 0); glVertex3f(  13, -22,  -25 );
-        glTexCoord2f(1, 1); glVertex3f(  13,  22,  -25 );
-        glTexCoord2f(0, 1); glVertex3f( -13,  22,  -25 );
+        glTexCoord2f(0, 0); glVertex3f( 15, -25,  15);
+        glTexCoord2f(1, 0); glVertex3f(  -15, -25,  15 );
+        glTexCoord2f(1, 1); glVertex3f(  -15,  25,  15 );
+        glTexCoord2f(0, 1); glVertex3f( 15,  25,  15 );
     glEnd();
+    
     
     // Render the right quad
     glBindTexture(GL_TEXTURE_2D, texture[3]);
     glBegin(GL_QUADS);
         glNormal3f(1,0,0);
-        glTexCoord2f(0, 0); glVertex3f( 14, -22, -10);
-        glTexCoord2f(1, 0); glVertex3f( 14, -22, 10 );
-        glTexCoord2f(1, 1); glVertex3f( 14,  22, 10 );
-        glTexCoord2f(0, 1); glVertex3f( 14,  22, -10);
+        glTexCoord2f(0, 0); glVertex3f( 15, -25, -15);
+        glTexCoord2f(1, 0); glVertex3f( 15, -25, 15 );
+        glTexCoord2f(1, 1); glVertex3f( 15,  25, 15 );
+        glTexCoord2f(0, 1); glVertex3f( 15,  25, -15);
     glEnd();
     
     // Render the top quad
     glBindTexture(GL_TEXTURE_2D, texture[4]);
     glBegin(GL_QUADS);
         glNormal3f(0, 1,0);
-        glTexCoord2f(0, 1); glVertex3f( -30,  23, -10 );
-        glTexCoord2f(0, 0); glVertex3f( -30,  23,  10 );
-        glTexCoord2f(1, 0); glVertex3f(  30,  23,  10 );
-        glTexCoord2f(1, 1); glVertex3f(  30,  23, -10);
+        glTexCoord2f(0, 1); glVertex3f( -15,  25, 15 );
+        glTexCoord2f(0, 0); glVertex3f( -15,  25,  -15 );
+        glTexCoord2f(1, 0); glVertex3f(  15,  25,  -15 );
+        glTexCoord2f(1, 1); glVertex3f(  15,  25, 15);
     glEnd();
     
     // Restore enable bits and matrix
@@ -486,48 +460,94 @@ void OnExit() {
 
 //------------------------------------------------------------	OnKeyPress()
 //
+
 void OnKeyPress(unsigned char key,int,int) {
     switch(key) {
-            
-            // increase the LOD
-        case '+':
+        // increase the LOD
+        case '+':{
             ++LOD;
             break;
-            
-            // decrease the LOD
-        case '-':
+        }
+        // decrease the LOD
+        case '-':{
             --LOD;
             
-            // have a minimum LOD value
-            if (LOD<3)
-                LOD=3;
+        // have a minimum LOD value
+        if (LOD<3)
+            LOD=3;
             break;
+        }
         //move the camera eye x down
-        case 'x':
+        case 'x':{
             cameraMatrix.xDown();
             break;
+        }
         //move the camera eye x up
-        case 'X':
+        case 'X':{
             cameraMatrix.xUp();
             break;
+        }
         //move the camera eye y down
-        case 'y':
+        case 'y':{
             cameraMatrix.yDown();
             break;
+        }
         //move the camera eye y up
-        case 'Y':
+        case 'Y':{
             cameraMatrix.yUp();
             break;
+        }
         //move the camera eye z down
-        case 'z':
+        case 'z':{
             cameraMatrix.zDown();
             break;
+        }
         //move the camera eye z up
-        case 'Z':
+        case 'Z':{
             cameraMatrix.zUp();
             break;
-        case 27:
+        }
+        //rotate the camera
+        case 'r':{
+            Matrix4 rotation = Matrix4();
+            rotation.identity();
+            rotation.makeRotateY(10);
+            Vector4 r = Vector4(cameraMatrix.center_e->x, cameraMatrix.center_e->y, cameraMatrix.center_e->z,0);
+            r = rotation * r;
+            cameraMatrix.center_e->x = r.x;
+            cameraMatrix.center_e->y = r.y;
+            cameraMatrix.center_e->z = r.z;
+            cameraMatrix.set();
+            
+            /*
+            //rotate the patch as well
+            model2world = rotation * model2world;
+            model2world.print("model2world after rotation ");
+            */
+            break;
+        }
+        //rotate the camera
+        case 'R':{
+            Matrix4 rotation = Matrix4();
+            rotation.identity();
+            rotation.makeRotateY(-10);
+            Vector4 r = Vector4(cameraMatrix.center_e->x, cameraMatrix.center_e->y, cameraMatrix.center_e->z,0);
+            r = rotation * r;
+            cameraMatrix.center_e->x = r.x;
+            cameraMatrix.center_e->y = r.y;
+            cameraMatrix.center_e->z = r.z;
+            cameraMatrix.set();
+            
+            /*
+            //rotate the patch as well
+            model2world = rotation * model2world;
+            model2world.print("model2world after rotation ");
+             */
+            break;
+        }
+        case 27:{
             exit(0);
+        }
         default:
             break;
     }
@@ -552,7 +572,7 @@ int main(int argc,char** argv) {
     // create the window
     glutCreateWindow("CSE 167 HW6 ");
     
-    //LoadGLTextures();
+    LoadGLTextures();
     
     // set the function to use to draw our scene
     glutDisplayFunc(OnDraw);
