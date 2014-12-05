@@ -6,6 +6,10 @@
 #include "SOIL.h"
 #include "Matrix4.h"
 #include "Camera.h"
+#include "shader.h"
+#include <iostream>
+
+#define PI 3.14159265f
 
 
 using namespace std;
@@ -19,44 +23,76 @@ struct Point {
 
 Matrix4 model2world = Matrix4();
 Camera cameraMatrix = Camera();
+bool envOn = false;
+Shader* shader;
+float timeForCurve;
 
 /// 4x4 grid of points that will define the surface
 
+/*
 Point Points[4][4] = {
     {
-        { 27,-55,50 },
-        {  12,-55,50},
-        { -12,-55,50 },
-        {-27,-55,50 }
+        { 38,-38,50 },
+        {  18,-38,50},
+        { -18,-38,50 },
+        {-38,-39,50 }
     },
     {
-        { 27, -55,25 },
-        {  12,-55,25 },
-        { -12,-55,25 },
-        {-27, -55,25 }
+        { 38, -38,25 },
+        {  18,-38,25 },
+        { -18,-38,25 },
+        {-38, -38,25 }
     },
     {
-        { 27, -55,-25 },
-        {  12,-55,-25 },
-        { -12,-55,-25 },
-        {-27, -55,-25 }
+        { 38, -38,-25 },
+        {  18,-38,-25 },
+        { -18,-38,-25 },
+        {-38, -38,-25 }
     },
     {
-        { 27, -55,-50 },
-        {  12,-55,-50},
-        { -12,-55,-50},
-        {-27, -55,-50}
+        { 38, -38,-50 },
+        {  18,-38,-50},
+        { -18,-38,-50},
+        {-38, -38,-50}
+    }
+};
+ */
+
+Point Points[4][4] = {
+    {
+        { 15,-10,-15 },
+        {  5,-10,-15},
+        { -5,-10,-15 },
+        {-15,-10,-15 }
+    },
+    {
+        { 15, -10,-5 },
+        {  5,-10,-5 },
+        { -5,-10,-5 },
+        {-15,-10,-5 }
+    },
+    {
+        { 15,-10,5 },
+        {  5,-10,5 },
+        { -5,-10,5 },
+        {-15,-10,5 }
+    },
+    {
+        { 15, -10,15 },
+        {  5,-10,15},
+        { -5,-10,15},
+        {-15, -10,15}
     }
 };
 
 // the level of detail of the surface
 unsigned int LOD=100;
-//calculate the
+//calculate the normal
 float delta_t = 0.00001;
 
 int windowId = 0;
 GLuint texture[5];
-     
+vector<const GLchar*> faces;
      int LoadGLTextures()
     {
         /* load an image file directly as a new OpenGL texture */
@@ -156,6 +192,7 @@ Point CalculateU(float t,int row) {
     float b2 = 3*t*it*it;
     float b3 =  it*it*it;
     
+    
     // sum the effects of the Points and their respective blending functions
     p.x = b0*Points[row][0].x +
 		  b1*Points[row][1].x +
@@ -173,6 +210,36 @@ Point CalculateU(float t,int row) {
 		  b3*Points[row][3].z ;
     
     return p;
+}
+
+//laod a cubemap
+GLuint loadCubemap(vector<const GLchar*> faces)
+{
+    cout << "enter in loadCubemap " << endl;
+    GLuint textureID;
+    glGenTextures(1, &textureID);
+    glActiveTexture(GL_TEXTURE0);
+    
+    int width,height;
+    unsigned char* image;
+    
+    glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+    for(GLuint i = 0; i < faces.size(); i++)
+    {
+        image = SOIL_load_image(faces[i], &width, &height, 0, SOIL_LOAD_RGB);
+        glTexImage2D(
+                     GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
+                     GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image
+                     );
+    }
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+    
+    return textureID;
 }
 
 //------------------------------------------------------------	CalculateV()
@@ -241,35 +308,42 @@ Point Calculate(float u,float v) {
 Point controlPoint_t[4];
 Point controlPoint_t_delta[4];
 //for calculating the normal
-Vector3 calculateNormal(float t,float v){
-  //for each set of 4 control points, create a new control point q
+
+
+Vector3 calculateNormal(float u,float v){
+    Point temp[4];
+    
     // calculate each point on our final v curve
-    controlPoint_t[0] = CalculateU(t,0);
-    controlPoint_t[1] = CalculateU(t,1);
-    controlPoint_t[2] = CalculateU(t,2);
-    controlPoint_t[3] = CalculateU(t,3);
+    temp[0] = CalculateU(u,0);
+    temp[1] = CalculateU(u,1);
+    temp[2] = CalculateU(u,2);
+    temp[3] = CalculateU(u,3);
     
-    controlPoint_t_delta[0] = CalculateU(t+delta_t,0);
-    controlPoint_t_delta[1] = CalculateU(t+delta_t,1);
-    controlPoint_t_delta[2] = CalculateU(t+delta_t,2);
-    controlPoint_t_delta[3] = CalculateU(t+delta_t,3);
+    float u_delta = u + 0.00001;
+    Point temp1[4];
+    temp1[0] = CalculateU(u_delta, 0);
+    temp1[1] = CalculateU(u_delta, 1);
+    temp1[2] = CalculateU(u_delta, 2);
+    temp1[3] = CalculateU(u_delta, 3);
     
-    Point u0 = CalculateV(v, controlPoint_t);
-    Point u1 = CalculateV(v+delta_t, controlPoint_t);
-    float x = u1.x - u0.x;
-    float y = u1.y - u0.y;
-    float z = u1.z - u0.z;
-    Vector3 tanu = Vector3(x,y,z);
+    
+    Point p = CalculateV(v, temp);
+    Point p1 = CalculateV(v+0.00001, temp);
+    
+    Vector3 u0 = Vector3(p.x, p.y, p.z);
+    Vector3 u1 = Vector3(p1.x, p1.y, p1.z);
+    Vector3 tanu = u1 - u0;
+    
+    Point p2 = CalculateV(v, temp1);
+    Vector3 v0 = Vector3(p2.x, p2.y, p2.z);
+    Vector3 tanv = v0 - u0;
     tanu.normalize();
-    
-    Point v0 = CalculateV(v, controlPoint_t_delta);
-    x = v0.x - u0.x;
-    y = v0.y - u0.y;
-    z = v0.z - u0.z;
-    Vector3 tanv = Vector3(x,y,z);
     tanv.normalize();
     
+    
     Vector3 normal = tanu.cross(tanu, tanv);
+    normal.normalize();
+    //normal.print("normal is ");
     return normal;
 }
 
@@ -299,68 +373,35 @@ void OnReshape(int w, int h)
 //------------------------------------------------------------	OnDraw()
 //
 void OnDraw() {
+    if(envOn){
+        shader->bind();
+        shader->printLog("sky shader ");
+    }
+    else{
+        shader->unbind();
+    }
     // clear the screen & depth buffer
     glClear(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
     Matrix4 glmatrix = cameraMatrix.getCameraMatrix();
     Matrix4 tmp = glmatrix * model2world;
-    tmp.transpose();
-    glLoadMatrixd(tmp.getPointer());
     
-    glBegin(GL_QUADS);
-    // use the parametric time value 0 to 1
-    for(int j=0;j!=LOD-1;++j) {// calculate the parametric u value
-         // calculate the parametric v value
-         float v = (float)j/(LOD-1);
-         float v1 = (float)(j+1)/(LOD-1);
-
-         for (int i=0;i!=LOD-1;++i){
-             float u = (float)i/(LOD-1);
-             float u1 = (float)(i+1)/(LOD-1);
-     
-             // calculate the point on the surface
-             Point p =  Calculate(u1,v);
-             Point p1 = Calculate(u1,v1);
-             Point p2 = Calculate(u,v1);
-             Point p3 = Calculate(u,v);
-             
-             glColor3f(0.8,0.5,1);
-             Vector3 n = calculateNormal(u1, v);
-             glNormal3f(n.x, n.y, n.z);
-             glVertex3f(p.x,p.y,p.z);
-             
-             n = calculateNormal(u1,v1);
-             glNormal3f(n.x, n.y, n.z);
-             glVertex3f(p1.x,p1.y,p1.z);
-             
-             n = calculateNormal(u,v1);
-             glNormal3f(n.x, n.y, n.z);
-             glVertex3f(p2.x,p2.y,p2.z);
-             
-             n = calculateNormal(u,v);
-             glNormal3f(n.x, n.y, n.z);
-             glVertex3f(p3.x,p3.y,p3.z);
-        }
-     }
-    glEnd();
   
     //skybox
     glPushMatrix();// Store the current matrix
     //glLoadIdentity();// Reset and transform the matrix.
     glmatrix = cameraMatrix.getCameraMatrix();//get the camera matrix
     tmp = glmatrix * model2world;
+    //tmp.identity();
     tmp.transpose();
     glMatrixMode(GL_MODELVIEW);
     glLoadMatrixd(tmp.getPointer());
 
     // Enable/Disable features
-    glPushAttrib(GL_ENABLE_BIT);
     glEnable(GL_TEXTURE_2D);
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_BLEND);
     glDisable(GL_LIGHTING);
-    // Just in case we set all vertices to white.
-    glColor4f(1,1,1,1);
+    glColor3f(1, 1, 1);
     
     // Render the front quad
     glBindTexture(GL_TEXTURE_2D, texture[0]);
@@ -371,64 +412,188 @@ void OnDraw() {
     // Use bilinear interpolation:
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-    
+    shader->unbind();
     glBegin(GL_QUADS);
         glNormal3f(0, 0,1);
-        glTexCoord2f(0, 0); glVertex3f(  15, -25, -15);
-        glTexCoord2f(1, 0); glVertex3f(  -15, -25, -15);
-        glTexCoord2f(1, 1); glVertex3f(  -15, 25,-15);
-        glTexCoord2f(0, 1); glVertex3f(  15,  25, -15 );
+        glTexCoord2f(0, 0); glVertex3f(  15, -15, -15);
+        glTexCoord2f(1, 0); glVertex3f(  -15, -15, -15);
+        glTexCoord2f(1, 1); glVertex3f(  -15, 15,-15);
+        glTexCoord2f(0, 1); glVertex3f(  15,  15, -15 );
         glEnd();
     
     
     // Render the left quad
     glBindTexture(GL_TEXTURE_2D, texture[1]);
+    // Make sure no bytes are padded:
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    // Select GL_MODULATE to mix texture with polygon color for shading:
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    // Use bilinear interpolation:
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
     glBegin(GL_QUADS);
         glNormal3f(-1,0,0);
-        glTexCoord2f(0, 0); glVertex3f(  -15, -25, 15);
-        glTexCoord2f(1, 0); glVertex3f(  -15, -25, -15 );
-        glTexCoord2f(1, 1); glVertex3f(  -15,  25, -15);
-        glTexCoord2f(0, 1); glVertex3f(  -15,  25, 15);
+        glTexCoord2f(0, 0); glVertex3f(  -15, -15, 15);
+        glTexCoord2f(1, 0); glVertex3f(  -15, -15, -15 );
+        glTexCoord2f(1, 1); glVertex3f(  -15,  15, -15);
+        glTexCoord2f(0, 1); glVertex3f(  -15,  15, 15);
     glEnd();
     
     
     // Render the back quad
     glBindTexture(GL_TEXTURE_2D,texture[2]);
+    // Make sure no bytes are padded:
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    // Select GL_MODULATE to mix texture with polygon color for shading:
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    // Use bilinear interpolation:
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
     glBegin(GL_QUADS);
         glNormal3f(0,0,-1);
-        glTexCoord2f(0, 0); glVertex3f( 15, -25,  15);
-        glTexCoord2f(1, 0); glVertex3f(  -15, -25,  15 );
-        glTexCoord2f(1, 1); glVertex3f(  -15,  25,  15 );
-        glTexCoord2f(0, 1); glVertex3f( 15,  25,  15 );
+        glTexCoord2f(0, 0); glVertex3f( 15, -15,  15);
+        glTexCoord2f(1, 0); glVertex3f(  -15, -15,  15 );
+        glTexCoord2f(1, 1); glVertex3f(  -15,  15,  15 );
+        glTexCoord2f(0, 1); glVertex3f( 15,  15,  15 );
     glEnd();
     
     
     // Render the right quad
     glBindTexture(GL_TEXTURE_2D, texture[3]);
+    // Make sure no bytes are padded:
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    // Select GL_MODULATE to mix texture with polygon color for shading:
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    // Use bilinear interpolation:
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
     glBegin(GL_QUADS);
         glNormal3f(1,0,0);
-        glTexCoord2f(0, 0); glVertex3f( 15, -25, -15);
-        glTexCoord2f(1, 0); glVertex3f( 15, -25, 15 );
-        glTexCoord2f(1, 1); glVertex3f( 15,  25, 15 );
-        glTexCoord2f(0, 1); glVertex3f( 15,  25, -15);
+        glTexCoord2f(0, 0); glVertex3f( 15, -15, -15);
+        glTexCoord2f(1, 0); glVertex3f( 15, -15, 15 );
+        glTexCoord2f(1, 1); glVertex3f( 15,  15, 15 );
+        glTexCoord2f(0, 1); glVertex3f( 15,  15, -15);
     glEnd();
     
     // Render the top quad
     glBindTexture(GL_TEXTURE_2D, texture[4]);
+    // Make sure no bytes are padded:
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    // Select GL_MODULATE to mix texture with polygon color for shading:
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    // Use bilinear interpolation:
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
     glBegin(GL_QUADS);
-        glNormal3f(0, 1,0);
-        glTexCoord2f(0, 1); glVertex3f( -15,  25, 15 );
-        glTexCoord2f(0, 0); glVertex3f( -15,  25,  -15 );
-        glTexCoord2f(1, 0); glVertex3f(  15,  25,  -15 );
-        glTexCoord2f(1, 1); glVertex3f(  15,  25, 15);
+        glNormal3f(0, -1,0);
+        glTexCoord2f(0, 1); glVertex3f( -15,  15, 15 );
+        glTexCoord2f(0, 0); glVertex3f( -15,  15,  -15 );
+        glTexCoord2f(1, 0); glVertex3f(  15,  15,  -15 );
+        glTexCoord2f(1, 1); glVertex3f(  15,  15, 15);
     glEnd();
     
     // Restore enable bits and matrix
-    glPopAttrib();
+    glDisable(GL_TEXTURE_2D);
     glPopMatrix();
     // currently we've been drawing to the back buffer, we need
     // to swap the back buffer with the front one to make the image visible
 
+    tmp.transpose();
+    glLoadMatrixd(tmp.getPointer());
+    
+    //    timeForCurve+=0.005;
+    //    if (timeForCurve == 1) {
+    //      timeForCurve=0;
+    //    }
+    //
+    //    for (int i = 0; i< 4;i++) {
+    //        for (int j = 0 ; j<3; j++) {
+    //            float angle = (Points[i][j].x/38+1.0);
+    //            if(angle + 2*timeForCurve > 2){
+    //                angle = 2*timeForCurve - (2-angle);
+    //            }else{
+    //                angle  = angle+2*timeForCurve;
+    //            }
+    //            Points[i][j].y = -38+30 * sinf(angle*PI);
+    //        }
+    //    }
+    glDisable(GL_TEXTURE_2D);
+
+    if(envOn){
+        shader->bind();
+    }
+    else{
+        shader->unbind();
+    }
+    glPushMatrix();
+    Matrix4 tmp1 = cameraMatrix.getCameraMatrix();
+    Matrix4 translation = Matrix4();
+    translation.makeTranslate(0, 5, 1);
+    translation = tmp1 * model2world * translation;
+    translation.transpose();
+    glLoadMatrixd(translation.getPointer());
+    glDisable(GL_LIGHTING);
+    glutSolidSphere(0.25, 20, 20);
+    // Enable lightinge
+    //GLfloat whiteMaterial[]={1.0f, 1.0f, 1.0f, 1.0f};
+    //GLfloat DiffuseLight[] = {0.2, 2, 1}; //set DiffuseLight
+    //glLightfv (GL_LIGHT0, GL_DIFFUSE, DiffuseLight); //change the light accordingly
+    GLfloat LightPosition[] = {0, 5, 1, 0}; //set the LightPosition to the specified values
+    glLightfv (GL_LIGHT0, GL_POSITION, LightPosition); //change the light accordingly
+    //glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, whiteMaterial);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glPopMatrix();
+    
+    
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glmatrix = cameraMatrix.getCameraMatrix();
+    //tmp = glmatrix * model2world;
+    tmp.transpose();
+    glLoadMatrixd(tmp.getPointer());
+    glBegin(GL_QUADS);
+    glColor3f(1, 0, 0);
+    // use the parametric time value 0 to 1
+    for(int j=0;j!=LOD-1;++j) {// calculate the parametric u value
+        // calculate the parametric v value
+        float v = (float)j/(LOD-1);
+        float v1 = (float)(j+1)/(LOD-1);
+        
+        for (int i=0;i!=LOD-1;++i){
+            float u = (float)i/(LOD-1);
+            float u1 = (float)(i+1)/(LOD-1);
+            
+            // calculate the point on the surface
+            Point p =  Calculate(u1,v);
+            Point p1 = Calculate(u1,v1);
+            Point p2 = Calculate(u,v1);
+            Point p3 = Calculate(u,v);
+            
+            //glColor3f(0.8,0.5,1);
+            Vector3 n = calculateNormal(u1, v);
+            glNormal3f(n.x, n.y, n.z);
+            glVertex3f(p.x,p.y,p.z);
+            
+            n = calculateNormal(u1,v1);
+            glNormal3f(n.x, n.y, n.z);
+            glVertex3f(p1.x,p1.y,p1.z);
+            
+            n = calculateNormal(u,v1);
+            glNormal3f(n.x, n.y, n.z);
+            glVertex3f(p2.x,p2.y,p2.z);
+            
+            n = calculateNormal(u,v);
+            glNormal3f(n.x, n.y, n.z);
+            glVertex3f(p3.x,p3.y,p3.z);
+        }
+    }
+    glEnd();
+    glPopMatrix();
+
+
+    
+    
     glutSwapBuffers();
     
     //solve for the first tangent approximation
@@ -437,18 +602,7 @@ void OnDraw() {
 //------------------------------------------------------------	OnInit()
 //
 void OnInit() {
-    // enable depth testing
-    glEnable(GL_DEPTH_TEST);
-    // Enable lighting
-    GLfloat whiteMaterial[]={1.0f, 1.0f, 1.0f, 1.0f};
-    GLfloat DiffuseLight[] = {0.2, 2, 1}; //set DiffuseLight
-    glLightfv (GL_LIGHT0, GL_DIFFUSE, DiffuseLight); //change the light accordingly
-    GLfloat LightPosition[] = {0, 0, 1, 0}; //set the LightPosition to the specified values
-    glShadeModel(GL_SMOOTH);
-    glLightfv (GL_LIGHT0, GL_POSITION, LightPosition); //change the light accordingly
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, whiteMaterial);
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
+    timeForCurve = 0;
     model2world.identity();
     cameraMatrix.set();//will set the camera matrix on default setting
 }
@@ -460,6 +614,16 @@ void OnExit() {
 
 //------------------------------------------------------------	OnKeyPress()
 //
+
+void idleCallback()
+{
+    for (int i = 0; i< 4;i++) {
+        for (int j = 0 ; j<4; j++) {
+            cout << Points[i][j].x << " " << Points[i][j].y << " " << Points[i][j].z << endl;
+        }
+    }
+  OnDraw(); //called when window redraw is needed
+}
 
 void OnKeyPress(unsigned char key,int,int) {
     switch(key) {
@@ -518,12 +682,7 @@ void OnKeyPress(unsigned char key,int,int) {
             cameraMatrix.center_e->y = r.y;
             cameraMatrix.center_e->z = r.z;
             cameraMatrix.set();
-            
-            /*
-            //rotate the patch as well
-            model2world = rotation * model2world;
-            model2world.print("model2world after rotation ");
-            */
+        
             break;
         }
         //rotate the camera
@@ -537,12 +696,11 @@ void OnKeyPress(unsigned char key,int,int) {
             cameraMatrix.center_e->y = r.y;
             cameraMatrix.center_e->z = r.z;
             cameraMatrix.set();
-            
-            /*
-            //rotate the patch as well
-            model2world = rotation * model2world;
-            model2world.print("model2world after rotation ");
-             */
+            break;
+        }
+        //turn enviornment on/off
+        case 'e':{
+            envOn = !envOn;
             break;
         }
         case 27:{
@@ -582,13 +740,29 @@ int main(int argc,char** argv) {
     
     // set the function for the key presses
     glutKeyboardFunc(OnKeyPress);
+    glutIdleFunc(idleCallback);
+    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
     
+    glEnable(GL_COLOR_MATERIAL);
+    
+    glEnable(GL_NORMALIZE);
+    
+    
+    faces.push_back("/Users/margaretwm3/Desktop/CSE167_HWs/CSE167HW6/PalldioPalace_extern_right.jpg");
+    faces.push_back("/Users/margaretwm3/Desktop/CSE167_HWs/CSE167HW6/PalldioPalace_extern_left.jpg");
+    faces.push_back("/Users/margaretwm3/Desktop/CSE167_HWs/CSE167HW6/PalldioPalace_extern_top.jpg");
+    faces.push_back("/Users/margaretwm3/Desktop/CSE167_HWs/CSE167HW6/PalldioPalace_extern_back.jpg");
+    faces.push_back("/Users/margaretwm3/Desktop/CSE167_HWs/CSE167HW6/PalldioPalace_extern_front.jpg");
+    shader = new Shader("/Users/margaretwm3/Desktop/CSE167_HWs/CSE167HW6/sky.vs",
+                        
+                        "/Users/margaretwm3/Desktop/CSE167_HWs/CSE167HW6/sky.fs",true);
+    GLuint textureCube = loadCubemap(faces);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, textureCube);
     // run our custom initialisation
     OnInit();
-    
     // set the function to be called when we exit
     atexit(OnExit);
-    
     // this function runs a while loop to keep the program running.
     glutMainLoop();
     return 0;

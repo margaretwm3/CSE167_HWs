@@ -55,6 +55,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		13DB6B361A3133FB004183D0 /* sky.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = sky.vs; sourceTree = "<group>"; };
+		13DB6B371A31342D004183D0 /* sky.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = sky.fs; sourceTree = "<group>"; };
 		13E4831A1A2BDCBC0047408E /* CSE167 HW6 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "CSE167 HW6"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13E483241A2BDCE80047408E /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		13E483261A2BDCF20047408E /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
@@ -127,6 +129,8 @@
 				13F0BFCD1A2D237E00FE187C /* PalldioPalace_extern_right.jpg */,
 				13F0BFCE1A2D237E00FE187C /* PalldioPalace_extern_top.jpg */,
 				13E483311A2C0AA90047408E /* color.frag */,
+				13DB6B361A3133FB004183D0 /* sky.vs */,
+				13DB6B371A31342D004183D0 /* sky.fs */,
 				13E483321A2C0AA90047408E /* color.vert */,
 				13E483361A2C0AEE0047408E /* Matrix4.h */,
 				13E483371A2C0AEE0047408E /* Vector3.h */,
