@@ -92,64 +92,8 @@ float delta_t = 0.00001;
 
 int windowId = 0;
 GLuint texture[5];
-
-
 vector<const GLchar*> faces;
-
-GLuint loadCubemap(vector<const GLchar*> faces)
-{
-    cout << "enter in loadCubemap " << endl;
-    GLuint textureID;
-    glGenTextures(1, &textureID);
-    glActiveTexture(GL_TEXTURE0);
-    
-    int width,height;
-    unsigned char* image;
-    
-    glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
-    for(GLuint i = 0; i < faces.size(); i++)
-    {
-        image = SOIL_load_image(faces[i], &width, &height, 0, SOIL_LOAD_RGB);
-        glTexImage2D(
-                     GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
-                     GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image
-                     );
-        
-        if(image ==0){
-            cout << "error" << endl;
-        }
-    }
-    
-//     GLubyte red[3] = {255, 0, 0};
-//     GLubyte green[3] = {0, 255, 0};
-//     GLubyte blue[3] = {0, 0, 255};
-//     GLubyte cyan[3] = {0, 255, 255};
-//     GLubyte magenta[3] = {255, 0, 255};
-//     GLubyte yellow[3] = {255, 255, 0};
-//     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X ,
-//     0,3,1,1,0,GL_RGB,GL_UNSIGNED_BYTE, red);
-//     glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X ,
-//     0,3,1,1,0,GL_RGB,GL_UNSIGNED_BYTE, green);
-//     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y ,
-//     0,3,1,1,0,GL_RGB,GL_UNSIGNED_BYTE, blue);
-//     glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y ,
-//     0,3,1,1,0,GL_RGB,GL_UNSIGNED_BYTE, cyan);
-//     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z ,
-//     0,3,1,1,0,GL_RGB,GL_UNSIGNED_BYTE, magenta);
-//     glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z ,
-//     0,3,1,1,0,GL_RGB,GL_UNSIGNED_BYTE, yellow);
-    
-    
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-    
-    return textureID;
-}
-int LoadGLTextures()
+     int LoadGLTextures()
     {
         /* load an image file directly as a new OpenGL texture */
         texture[0] = SOIL_load_OGL_texture
@@ -269,7 +213,34 @@ Point CalculateU(float t,int row) {
 }
 
 //laod a cubemap
-
+GLuint loadCubemap(vector<const GLchar*> faces)
+{
+    cout << "enter in loadCubemap " << endl;
+    GLuint textureID;
+    glGenTextures(1, &textureID);
+    glActiveTexture(GL_TEXTURE0);
+    
+    int width,height;
+    unsigned char* image;
+    
+    glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+    for(GLuint i = 0; i < faces.size(); i++)
+    {
+        image = SOIL_load_image(faces[i], &width, &height, 0, SOIL_LOAD_RGB);
+        glTexImage2D(
+                     GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
+                     GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image
+                     );
+    }
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+    
+    return textureID;
+}
 
 //------------------------------------------------------------	CalculateV()
 // Having generated 4 points in the u direction, we need to
@@ -337,18 +308,18 @@ Point Calculate(float u,float v) {
 Point controlPoint_t[4];
 Point controlPoint_t_delta[4];
 //for calculating the normal
-Vector3 calculateNormal(float u,float v){
+Vector3 calculateNormal(float t,float v){
   //for each set of 4 control points, create a new control point q
     // calculate each point on our final v curve
-    controlPoint_t[0] = CalculateU(u,0);
-    controlPoint_t[1] = CalculateU(u,1);
-    controlPoint_t[2] = CalculateU(u,2);
-    controlPoint_t[3] = CalculateU(u,3);
+    controlPoint_t[0] = CalculateU(t,0);
+    controlPoint_t[1] = CalculateU(t,1);
+    controlPoint_t[2] = CalculateU(t,2);
+    controlPoint_t[3] = CalculateU(t,3);
     
-    controlPoint_t_delta[0] = CalculateU(u+delta_t,0);
-    controlPoint_t_delta[1] = CalculateU(u+delta_t,1);
-    controlPoint_t_delta[2] = CalculateU(u+delta_t,2);
-    controlPoint_t_delta[3] = CalculateU(u+delta_t,3);
+    controlPoint_t_delta[0] = CalculateU(t+delta_t,0);
+    controlPoint_t_delta[1] = CalculateU(t+delta_t,1);
+    controlPoint_t_delta[2] = CalculateU(t+delta_t,2);
+    controlPoint_t_delta[3] = CalculateU(t+delta_t,3);
     
     Point u0 = CalculateV(v, controlPoint_t);
     Point u1 = CalculateV(v+delta_t, controlPoint_t);
@@ -365,8 +336,7 @@ Vector3 calculateNormal(float u,float v){
     Vector3 tanv = Vector3(x,y,z);
     tanv.normalize();
     
-    Vector3 normal = tanu.cross(tanv, tanu);
-    //normal.print(" normal ");
+    Vector3 normal = tanu.cross(tanu, tanv);
     return normal;
 }
 
@@ -407,7 +377,6 @@ void OnDraw() {
     glClear(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     Matrix4 glmatrix = cameraMatrix.getCameraMatrix();
-    cameraMatrix.getCameraMatrix().print("inverse camera matrix ");
     Matrix4 tmp = glmatrix * model2world;
     tmp.transpose();
     glLoadMatrixd(tmp.getPointer());
@@ -425,7 +394,7 @@ void OnDraw() {
             }else{
                 angle  = angle+2*timeForCurve;
             }
-            Points[i][j].y = -15+15 * sinf(angle*PI);
+            Points[i][j].y = -38+30 * sinf(angle*PI);
         }
     }
     if(envOn){
@@ -438,12 +407,12 @@ void OnDraw() {
     // use the parametric time value 0 to 1
     for(int j=0;j!=LOD-1;++j) {// calculate the parametric u value
          // calculate the parametric v value
-         float u = (float)j/(LOD-1);
-         float u1 = (float)(j+1)/(LOD-1);
+         float v = (float)j/(LOD-1);
+         float v1 = (float)(j+1)/(LOD-1);
 
          for (int i=0;i!=LOD-1;++i){
-             float v = (float)i/(LOD-1);
-             float v1 = (float)(i+1)/(LOD-1);
+             float u = (float)i/(LOD-1);
+             float u1 = (float)(i+1)/(LOD-1);
              
              // calculate the point on the surface
              Point p =  Calculate(u1,v);
@@ -451,7 +420,7 @@ void OnDraw() {
              Point p2 = Calculate(u,v1);
              Point p3 = Calculate(u,v);
              
-            // glColor3f(0.8,0.5,1);
+             glColor3f(0.8,0.5,1);
              Vector3 n = calculateNormal(u1, v);
              glNormal3f(n.x, n.y, n.z);
              glVertex3f(p.x,p.y,p.z);
@@ -479,7 +448,6 @@ void OnDraw() {
     tmp.transpose();
     glMatrixMode(GL_MODELVIEW);
     glLoadMatrixd(tmp.getPointer());
-    glActiveTexture(GL_TEXTURE0);
 
     // Enable/Disable features
     glPushAttrib(GL_ENABLE_BIT);
@@ -717,25 +685,20 @@ int main(int argc,char** argv) {
     // set the function for the key presses
     glutKeyboardFunc(OnKeyPress);
     glutIdleFunc(idleCallback);
-    glEnable(GL_NORMALIZE);
-    shader = new Shader("/Users/margaretwm3/Desktop/CSE167_HWs/CSE167HW6/sky.vs",
-                        
-                        "/Users/margaretwm3/Desktop/CSE167_HWs/CSE167HW6/sky.fs",true);
-    if(envOn){
-        shader->bind();
-    }
-    else{
-        shader->unbind();
-    }
+    
+    
     faces.push_back("/Users/margaretwm3/Desktop/CSE167_HWs/CSE167HW6/PalldioPalace_extern_right.jpg");
     faces.push_back("/Users/margaretwm3/Desktop/CSE167_HWs/CSE167HW6/PalldioPalace_extern_left.jpg");
     faces.push_back("/Users/margaretwm3/Desktop/CSE167_HWs/CSE167HW6/PalldioPalace_extern_top.jpg");
-    faces.push_back("/Users/margaretwm3/Desktop/CSE167_HWs/CSE167HW6/PalldioPalace_extern_base.jpg");
     faces.push_back("/Users/margaretwm3/Desktop/CSE167_HWs/CSE167HW6/PalldioPalace_extern_back.jpg");
     faces.push_back("/Users/margaretwm3/Desktop/CSE167_HWs/CSE167HW6/PalldioPalace_extern_front.jpg");
-    GLuint skybox = loadCubemap(faces);
+    shader = new Shader("/Users/margaretwm3/Desktop/CSE167_HWs/CSE167HW6/sky.vs",
+                        
+                        "/Users/margaretwm3/Desktop/CSE167_HWs/CSE167HW6/sky.fs",true);
+    GLuint textureCube = loadCubemap(faces);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, skybox);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, textureCube);
+    
     
     // run our custom initialisation
     OnInit();

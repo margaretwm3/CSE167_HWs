@@ -12,7 +12,7 @@
 //constructor of Camera object
 Camera::Camera(){
     c.identity();
-    center_e = new Vector3(0,15,15);
+    center_e = new Vector3(0,10,10);
     up = new Vector3(0,1,0);
     look_at_d = new Vector3(0,0,0);
 }
