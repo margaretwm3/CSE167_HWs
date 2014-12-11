@@ -13,7 +13,6 @@
 
 
 using namespace std;
-
 /// a structure to hold a control point of the surface
 struct Point {
     float x;
@@ -28,36 +27,6 @@ Shader* shader;
 float timeForCurve;
 
 /// 4x4 grid of points that will define the surface
-
-/*
-Point Points[4][4] = {
-    {
-        { 38,-38,50 },
-        {  18,-38,50},
-        { -18,-38,50 },
-        {-38,-39,50 }
-    },
-    {
-        { 38, -38,25 },
-        {  18,-38,25 },
-        { -18,-38,25 },
-        {-38, -38,25 }
-    },
-    {
-        { 38, -38,-25 },
-        {  18,-38,-25 },
-        { -18,-38,-25 },
-        {-38, -38,-25 }
-    },
-    {
-        { 38, -38,-50 },
-        {  18,-38,-50},
-        { -18,-38,-50},
-        {-38, -38,-50}
-    }
-};
- */
-
 Point Points[4][4] = {
     {
         { 15,-10,-15 },
@@ -93,12 +62,11 @@ float delta_t = 0.00001;
 int windowId = 0;
 GLuint texture[5];
 
-
 vector<const GLchar*> faces;
-
 GLuint loadCubemap(vector<const GLchar*> faces)
 {
     cout << "enter in loadCubemap " << endl;
+    cout << "faces' size " << faces.size() << endl;
     GLuint textureID;
     glGenTextures(1, &textureID);
     glActiveTexture(GL_TEXTURE0);
@@ -149,6 +117,7 @@ GLuint loadCubemap(vector<const GLchar*> faces)
     
     return textureID;
 }
+
 int LoadGLTextures()
     {
         /* load an image file directly as a new OpenGL texture */
@@ -727,6 +696,7 @@ int main(int argc,char** argv) {
     else{
         shader->unbind();
     }
+    
     faces.push_back("/Users/margaretwm3/Desktop/CSE167_HWs/CSE167HW6/PalldioPalace_extern_right.jpg");
     faces.push_back("/Users/margaretwm3/Desktop/CSE167_HWs/CSE167HW6/PalldioPalace_extern_left.jpg");
     faces.push_back("/Users/margaretwm3/Desktop/CSE167_HWs/CSE167HW6/PalldioPalace_extern_top.jpg");
